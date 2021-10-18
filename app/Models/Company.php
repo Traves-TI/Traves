@@ -13,4 +13,7 @@ class Company extends Model
         return $this->belongsToMany(User::class,'company_users')->get();
     }
 
+    public function types(){
+        return $this->belongsToMany(CompanyType::class,'company_company_types')->get();
+    }
 }

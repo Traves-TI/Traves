@@ -22,20 +22,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        
-        $users = User::All();
-        echo"<pre>";
-           
-       foreach ($users as $user) {
-           $companies = $user->companies()->get();
-           echo $user->name . PHP_EOL;
-           foreach ($companies as $companie) {
-               echo ($companie->name) . PHP_EOL;
-           }
-           echo PHP_EOL;
-       }
-
+    public function index(){
+        return view("admin.app");
     }
 }
