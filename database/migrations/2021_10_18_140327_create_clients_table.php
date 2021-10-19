@@ -28,8 +28,6 @@ class CreateClientsTable extends Migration
 
             $table->string('vat')->nullable();
   
-            $table->tinyInteger('level');
-
             $table->tinyInteger('parent');
 
 

@@ -1,7 +1,8 @@
-@extends('layouts.app')
+@extends('admin.app')
 
 @section('content')
-<div class="container">
+
+<div class="container" style='margin-bottom: 200px'>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -47,6 +48,7 @@
                                     <label class="form-check-label" for="remember">
                                         {{ __('Remember Me') }}
                                     </label>
+                                    <a href="{{route('register')}}">{{__("Register")}}</a>
                                 </div>
                             </div>
                         </div>

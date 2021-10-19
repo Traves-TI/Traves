@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,4 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/jesus', 'HomeController@index')->name('login');
 
-// Auth::routes();
+ Auth::routes();
+
+Route::group(['middleware' => ['auth']], function(){
+    Route::get("/admin", 'Main\DashboardController@index');
+    Route::name("admin.")->group(function(){
+
+        Route::resource('/clients', Main\ClientController::class);
+
+    });
+
+});

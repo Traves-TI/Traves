@@ -15,7 +15,12 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        
+        $clients = Client::all();
+        return view('admin.clients.index', [
+            'clients' => $clients,
+        ]);
+
     }
 
     /**
@@ -25,7 +30,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.clients.create');
     }
 
     /**
@@ -36,7 +41,12 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->except('_token');
+
+        if(isset($data['name']) AND !empty($data['name'])){
+            $client = Client::create($data);
+        }
+
     }
 
     /**

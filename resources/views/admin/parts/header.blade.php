@@ -17,17 +17,19 @@
     
     <script src="{{mix("js/app.js")}}"></script>
 </head>
-<body id="page-top">
+<body id="page-top" @isset($body_class) class="{{$body_class}}" @endisset>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
+        @auth
+            @include('admin.parts.sidebar')
+        @endauth
         
-        @include('admin.parts.sidebar')
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
-
+            
                 @include('admin.parts.topbar')
