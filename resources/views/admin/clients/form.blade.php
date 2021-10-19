@@ -10,6 +10,17 @@
 
     @csrf()
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{!! $error !!}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
     <div class='row form-group'>
 
         <div class='col-md-6 col-sm-12'>
@@ -17,7 +28,7 @@
                 name='name' 
                 placeholder="{{ __('Your name') }}" 
                 class='form-control' 
-                required
+                _required
                 />
         </div>
 

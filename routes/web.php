@@ -18,7 +18,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/jesus', 'HomeController@index')->name('login');
 
- Auth::routes();
+Auth::routes();
+
+Route::get('/logout', function(){
+    Auth::logout();
+    return redirect()->route('login');
+});
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get("/admin", 'Main\DashboardController@index');

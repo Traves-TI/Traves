@@ -28,7 +28,7 @@ class CreateClientsTable extends Migration
 
             $table->string('vat')->nullable();
   
-            $table->tinyInteger('parent');
+            $table->tinyInteger('parent')->nullable();
 
 
             $table->timestamps();

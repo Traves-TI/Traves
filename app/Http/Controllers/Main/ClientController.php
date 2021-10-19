@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClientValidationRequest;
 use App\Models\Client;
 use Illuminate\Http\Request;
 
@@ -39,13 +40,35 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClientValidationRequest $request)
     {
+
+        dd($request->all());
+
         $data = $request->except('_token');
+
+
+
+        $errors = [];
+
+        $validator = $request->validated();
+
+        dd($validator);
 
         if(isset($data['name']) AND !empty($data['name'])){
             $client = Client::create($data);
+
+            if($client){
+                return redirect()->route('admin.clients.index')->withInput(['success' => 'The client was created with success']);
+            } else {
+                $errors['client.create'] = __('It wasn\'t possible to create a client');
+            }
+
+        } else {
+            $errors['client.name'] = __('The field name is mandatory');
         }
+
+        return redirect()->back()->withErrors($errors);
 
     }
 
