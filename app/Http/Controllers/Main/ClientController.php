@@ -43,29 +43,16 @@ class ClientController extends Controller
     public function store(ClientValidationRequest $request)
     {
 
-        dd($request->all());
-
         $data = $request->except('_token');
 
-
+        $client = Client::create($data);
 
         $errors = [];
-
-        $validator = $request->validated();
-
-        dd($validator);
-
-        if(isset($data['name']) AND !empty($data['name'])){
-            $client = Client::create($data);
-
-            if($client){
-                return redirect()->route('admin.clients.index')->withInput(['success' => 'The client was created with success']);
-            } else {
-                $errors['client.create'] = __('It wasn\'t possible to create a client');
-            }
-
+        if($client){
+            return redirect()->route('admin.clients.index')->withInput(['success' => 'The client was created with success']);
         } else {
-            $errors['client.name'] = __('The field name is mandatory');
+           
+            $errors['client.create'] = __('It wasn\'t possible to create a client');
         }
 
         return redirect()->back()->withErrors($errors);
