@@ -39,7 +39,9 @@
                                 <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1">{{ __('Phone') }}</th>
                                 <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1">{{ __('Zip Code') }}</th>
                                 <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1">{{ __('City') }}</th>
-                                <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"> {{ __('Created at') }} </th></tr>
+                                <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"> {{ __('Created at') }} </th>
+                                <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"> {{ __('Operations') }} </th>
+                            </tr>
                         </thead>
 
                         <tfoot>
@@ -50,6 +52,7 @@
                                 <th rowspan="1" colspan="1">>{{ __('Zip Code') }}</th>
                                 <th rowspan="1" colspan="1">{{ __('City') }}</th>
                                 <th rowspan="1" colspan="1">{{ __('Created at') }}</th></tr>
+                                <th rowspan="1" colspan="1">{{ __('Operations') }}</th></tr>
                         </tfoot>
                         <tbody>
                         
@@ -63,6 +66,10 @@
                                 <td>{{ $client->zip_code }}</td>
                                 <td>{{ $client->city }}</td>
                                 <td>{{ date('d/m/Y H:i', strtotime($client->created_at)) }}</td>
+                                <td>
+                                        <a class='display-inline-block' href=" {{ route('admin.clients.edit', [$client->id]) }} "><i class="fa fa-edit"></i></a> 
+                                        <form class='display-inline-block'><a href=" {{ route('admin.clients.destroy', [$client->id]) }} "><i class='fa fa-trash'></i></a></form>
+                                </td>
                             </tr>
                         @endforeach
 

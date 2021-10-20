@@ -14,6 +14,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="{{mix("css/app.css")}}" rel="stylesheet">
+    <link href="{{mix("css/admin/main.css")}}" rel="stylesheet">
     
     <script src="{{mix("js/app.js")}}"></script>
 </head>
