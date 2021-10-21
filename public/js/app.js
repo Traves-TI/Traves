@@ -37360,6 +37360,8 @@ __webpack_require__(/*! ./sb-admin-2 */ "./resources/js/sb-admin-2.js");
 
 __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
 
+__webpack_require__(/*! ./modal-confirm */ "./resources/js/modal-confirm.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -37407,6 +37409,26 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/modal-confirm.js":
+/*!***************************************!*\
+  !*** ./resources/js/modal-confirm.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(function () {
+  $("[data-confirm]").on("click", function (e) {
+    var message = $(this).data("confirm");
+
+    if (!confirm(message)) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  });
+});
+
+/***/ }),
+
 /***/ "./resources/js/sb-admin-2.js":
 /*!************************************!*\
   !*** ./resources/js/sb-admin-2.js ***!
@@ -37414,10 +37436,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-(function ($) {
-  "use strict"; // Start of use strict
-  // Toggle the side navigation
-
+$(function () {
+  /* Toggle the side navigation */
   $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
@@ -37471,7 +37491,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     }, 1000, 'easeInOutExpo');
     e.preventDefault();
   });
-})(jQuery); // End of use strict
+});
 
 /***/ }),
 

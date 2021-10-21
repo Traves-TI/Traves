@@ -17,7 +17,7 @@ class ClientController extends Controller
     public function index()
     {
         
-        $clients = Client::all();
+        $clients = Client::orderBy('name','ASC')->paginate(20);
         return view('admin.clients.index', [
             'clients' => $clients,
         ]);
@@ -49,13 +49,14 @@ class ClientController extends Controller
 
         $errors = [];
         if($client){
-            return redirect()->route('admin.clients.index')->withInput(['success' => 'The client was created with success']);
+            $request->session()->flash('success', 'The client was created with success');
+            return redirect()->route('admin.clients.index');
         } else {
            
             $errors['client.create'] = __('It wasn\'t possible to create a client');
         }
 
-        return redirect()->back()->withErrors($errors);
+        return redirect()->back()->withErrors($errors)->withInput($data);
 
     }
 
@@ -78,7 +79,7 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        
+        return view("admin.clients.edit", ["client" => $client]);
     }
 
     /**
@@ -88,9 +89,24 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(ClientValidationRequest $request, Client $client)
     {
-        //
+        $data = $request->except('_token');
+        $erros = [];
+        if($client){
+            $res = $client->update($data);
+            if($res){
+                $request->session()->flash('success', 'The client was updated with success');
+                return redirect()->route('admin.clients.edit', [$client]);
+            }
+            $erros['client.update'] = __("There was an error updating client details");
+        }else{
+           $errors[] =  __('It wasn\'t possible to update the client');
+        }
+
+        return redirect()->back()->withErrors($errors)->withInput($data);
+
+        
     }
 
     /**
@@ -101,6 +117,11 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        if($client->delete()){
+            session()->flash('success', 'The client was deleted with success');
+            return redirect()->route('admin.clients.index');
+        }
+        return redirect()->route('admin.clients.index')->withErrors(["client.delete" => "It wasn't possible to delete the cliente"]);
+
     }
 }

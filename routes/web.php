@@ -26,7 +26,7 @@ Route::get('/logout', function(){
 });
 
 Route::group(['middleware' => ['auth']], function(){
-    Route::get("/admin", 'Main\DashboardController@index');
+    Route::get("/admin", 'Main\DashboardController@index')->name('admin.dashboard');
     Route::name("admin.")->group(function(){
 
         Route::resource('/clients', Main\ClientController::class);
