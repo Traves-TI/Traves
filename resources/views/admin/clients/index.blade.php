@@ -3,51 +3,49 @@
 
 @section('content') 
 
-    @if(isset($clients) AND $clients->count() > 0)
-    @include('admin.parts.alerts')
-    <div class="table-responsive">
+@include('admin.parts.alerts')
+<div class="table-responsive">
 
-        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <div class="card">
-                <div class="card-body">
+    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+        <div class="card">
+            <div class="card-body">
 
-               
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="dataTables_length" id="dataTable_length">
-                                <label>{{__('Items per page')}}  
-                                    <select name="dataTable_length" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm display-inline-block">
-                                        <?
-                                            $entries = [10, 25, 50, 100];
-                                           
-                                            foreach ($entries as $value) {
-                                                $op = ((isset($_GET["entries"]) and in_array($_GET["entries"], $entries)) and $value == $_GET["entries"]) ? "selected" : "";
-                                                echo "<option value='{$value}' $op>$value</option>";
-                                            }
-                                        ?>
-                                        
-                                    </select></label>
-                            </div>
-                        </div>
-                    <div class="col-sm-12 col-md-6">
-                        <form action="" method="get" name="searchForm">
-                            <div id="dataTable_filter" class="dataTables_filter">
-                                <label class="nowrap">Search: 
-                                    <input type="search" class="display-inline-block form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                    <button class="btn btn-sm btn-info display-inline-block">{{__('Send')}}</button>
-                                </label>
-                        </form>
+           
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div id="dataTable_length">
+                            <label>{{__('Items per page')}}  
+                                <select name="dataTable_length" class="custom-select custom-select-sm form-control form-control-sm display-inline-block">
+                                    <?
+                                        $entries = [10, 25, 50, 100];
+                                        foreach ($entries as $value) {
+                                            $op = ((isset($_GET["entries"]) and in_array($_GET["entries"], $entries)) and $value == $_GET["entries"]) ? "selected" : "";
+                                            echo "<option value='{$value}' $op>$value</option>";
+                                        }
+                                    ?>
+                                    
+                                </select></label>
                         </div>
                     </div>
+                <div class="col-sm-12 col-md-6">
+                    <form action="" method="get" name="searchForm">
+                        <label class="nowrap">{{ __('Search:') }}
+                            <input type="search" class="display-inline-block form-control form-control-sm" placeholder="{{ __('Keywords') }}" value='@isset($_GET["search"]){{ $_GET["search"] }}@endisset' name='search'>
+                            <button class="btn btn-sm btn-info display-inline-block">{{__('Send')}}</button>
+                        </label>
+                    </form>
                 </div>
             </div>
         </div>
-        <hr>
+    </div>
+    <hr>
+@if(isset($clients) AND $clients->count() > 0)
+   
         <div class="card">
             <div class="card-body">   
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" style="width: 100%;">
                         
                             <thead>
                                 <tr role="row">
@@ -82,13 +80,17 @@
     </div>
 
     <br />
-        {{ $clients->links() }}
+        {{ $clients->appends(request()->query())->links() }}
     </div>
     </div>
 
     @else
+    <div class="card">
+        <div class="card-body">
+            <p>{{__('There are no clients to be shown.')}}</p>
 
-        <p>{{__('There are no clients registered yet.')}}</p>
+        </div>
+    </div>
     
     @endif
 

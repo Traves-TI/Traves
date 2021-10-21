@@ -37352,7 +37352,7 @@ $(function () {
       current_url += "?entries=" + option;
     } else {
       if (current_url.indexOf("entries") === -1) {
-        current_url += "?entries=" + option;
+        current_url += "&entries=" + option;
       } else {
         current_url = current_url.replace(/entries=\d+/, 'entries=' + option);
       }

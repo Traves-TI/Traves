@@ -19,14 +19,29 @@ class ClientController extends Controller
 
         $data = $request->all();
         $quant = 20;
+        $clients = Client::orderBy('name','ASC');
         if(!empty($data)){
-            if($data["entries"]){
+            if(isset($data["entries"]) and !empty($data["entries"])){
                 $quant = $data["entries"];
             }
             
+            if(isset($_GET["search"])){
+                if(!empty($_GET["search"])){
+                    $clients = $clients->where("name", 'like', '%' . $data["search"] . '%');
+                }else{
+                    return redirect()->route('admin.clients.index');
+                }
+
+            }
         }
+
+        if(isset($_GET["entries"]) and isset($_GET["page"]) and $_GET["entries"] > $clients->count()){
+            return redirect()->route('admin.clients.index', $request->except("page"));
+        }
+
+
         
-        $clients = Client::orderBy('name','ASC')->paginate($quant);
+        $clients = $clients->paginate($quant);
         return view('admin.clients.index', [
             'clients' => $clients,
         ]);

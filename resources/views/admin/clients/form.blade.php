@@ -37,7 +37,7 @@
                 </div>
                 <div class='row form-group'>
 
-                    <div class='col-md-6 col-sm-12'>
+                    <div class='col-md-4 col-sm-12'>
                         <input type='email' 
                             name='email' 
                             value='@isset($client){{ $client->email }}@else{{ old('email')}}@endisset'
@@ -47,12 +47,21 @@
                             />
                     </div>
                     
-                    <div class='col col-md-6 col-sm-12'>
+                    <div class='col col-md-4 col-sm-12'>
                         <input type='tel' 
                             name='phone' 
                             value='@isset($client){{ $client->phone }}@else{{ old('phone')}}@endisset'
                             placeholder="{{ __('Your phone') }}" 
                             class='form-control mask-tel' 
+                            />
+                    </div>
+                    
+                    <div class='col col-md-4 col-sm-12'>
+                        <input type='text' 
+                            name='vat' 
+                            value='@isset($client){{ $client->vat }}@else{{ old('vat')}}@endisset'
+                            placeholder="{{ __('Your vat number') }}" 
+                            class='form-control' 
                             />
                     </div>
 
