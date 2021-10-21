@@ -37343,7 +37343,24 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+$(function () {
+  $("[name='dataTable_length']").on("change", function () {
+    var option = $(this).val();
+    var current_url = window.location.href;
 
+    if (current_url.indexOf("?") === -1) {
+      current_url += "?entries=" + option;
+    } else {
+      if (current_url.indexOf("entries") === -1) {
+        current_url += "?entries=" + option;
+      } else {
+        current_url = current_url.replace(/entries=\d+/, 'entries=' + option);
+      }
+    }
+
+    window.location = current_url;
+  });
+});
 
 /***/ }),
 
@@ -37361,6 +37378,8 @@ __webpack_require__(/*! ./sb-admin-2 */ "./resources/js/sb-admin-2.js");
 __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
 
 __webpack_require__(/*! ./modal-confirm */ "./resources/js/modal-confirm.js");
+
+__webpack_require__(/*! ./helpers */ "./resources/js/helpers.js");
 
 /***/ }),
 
@@ -37406,6 +37425,39 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/helpers.js":
+/*!*********************************!*\
+  !*** ./resources/js/helpers.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(function () {
+  /**
+   * @param {*} url 
+   * @param {*} method 
+   * @param {*} data 
+   * @returns data or false for ajax requests
+   */
+  function makeAjax(url, method) {
+    var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    if (url != null && method != null) {
+      $.ajax({
+        method: method,
+        url: url,
+        data: data
+      }).done(function (msg) {
+        alert(msg);
+      });
+    }
+
+    return false;
+  }
+});
 
 /***/ }),
 

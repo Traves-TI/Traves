@@ -15,19 +15,28 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="dataTables_length" id="dataTable_length">
-                            <label>{{__('Items per page')}}  <select name="dataTable_length" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm display-inline-block">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select></label>
+                                <label>{{__('Items per page')}}  
+                                    <select name="dataTable_length" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm display-inline-block">
+                                        <?
+                                            $entries = [10, 25, 50, 100];
+                                           
+                                            foreach ($entries as $value) {
+                                                $op = ((isset($_GET["entries"]) and in_array($_GET["entries"], $entries)) and $value == $_GET["entries"]) ? "selected" : "";
+                                                echo "<option value='{$value}' $op>$value</option>";
+                                            }
+                                        ?>
+                                        
+                                    </select></label>
                             </div>
                         </div>
                     <div class="col-sm-12 col-md-6">
-                        <div id="dataTable_filter" class="dataTables_filter">
-                            <label class="nowrap">Search: 
-                                <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                            </label>
+                        <form action="" method="get" name="searchForm">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <label class="nowrap">Search: 
+                                    <input type="search" class="display-inline-block form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    <button class="btn btn-sm btn-info display-inline-block">{{__('Send')}}</button>
+                                </label>
+                        </form>
                         </div>
                     </div>
                 </div>
@@ -73,9 +82,7 @@
     </div>
 
     <br />
-
-    {{ $clients->links() }}
-
+        {{ $clients->links() }}
     </div>
     </div>
 

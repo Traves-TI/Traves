@@ -14,10 +14,19 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        $data = $request->all();
+        $quant = 20;
+        if(!empty($data)){
+            if($data["entries"]){
+                $quant = $data["entries"];
+            }
+            
+        }
         
-        $clients = Client::orderBy('name','ASC')->paginate(20);
+        $clients = Client::orderBy('name','ASC')->paginate($quant);
         return view('admin.clients.index', [
             'clients' => $clients,
         ]);
