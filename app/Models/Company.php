@@ -8,6 +8,8 @@ class Company extends Model
 {
     protected $table = "companies";
 
+    protected $fillable = ['name', 'phone', 'email','address','zip_code','city','vat_id','country'];
+
     public function users()
    {   
         return $this->belongsToMany(User::class,'company_users')->get();

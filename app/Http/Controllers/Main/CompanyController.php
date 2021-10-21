@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CompanyValidationRequest;
 use App\Models\Company;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class CompanyController extends Controller
 {
@@ -13,9 +16,36 @@ class CompanyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data = $request->all();
+        $quant = 20;
+        $companies = Company::orderBy('name','ASC');
+        if(!empty($data)){
+            if(isset($data["entries"]) and !empty($data["entries"])){
+                $quant = $data["entries"];
+            }
+            
+            if(isset($_GET["search"])){
+                if(!empty($_GET["search"])){
+                    $companies = $companies->where("name", 'like', '%' . $data["search"] . '%');
+                }else{
+                    return redirect()->route('admin.companies.index');
+                }
+
+            }
+        }
+
+        if(isset($_GET["entries"]) and isset($_GET["page"]) and $_GET["entries"] > $companies->count()){
+            return redirect()->route('admin.companies.index', $request->except("page"));
+        }
+
+
+        
+        $companies = $companies->paginate($quant);
+        return view('admin.companies.index', [
+            'companies' => $companies,
+        ]);
     }
 
     /**
@@ -25,7 +55,7 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.companies.create');
     }
 
     /**
@@ -34,9 +64,25 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyValidationRequest $request)
     {
-        //
+        $data = $request->except('_token');
+
+        $company = Company::create($data);
+
+        $errors = [];
+        if($company){
+
+            dd('Criar a relação entre a empresa e o utilizador');
+
+            $request->session()->flash('success', 'The company was created with success');
+            return redirect()->route('admin.companies.index');
+        } else {
+           
+            $errors['company.create'] = __('It wasn\'t possible to create a company');
+        }
+
+        return redirect()->back()->withErrors($errors)->withInput($data);
     }
 
     /**
@@ -47,7 +93,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        dd('Guardar em uma sessão global o ID da sessão e redirecionar para o index dos clientes');
     }
 
     /**
@@ -58,7 +104,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        //
+        return view("admin.companies.edit", ["company" => $company]);
     }
 
     /**
@@ -68,9 +114,22 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Company $company)
+    public function update(CompanyValidationRequest $request, Company $company)
     {
-        //
+        $data = $request->except('_token');
+        $erros = [];
+        if($company){
+            $res = $company->update($data);
+            if($res){
+                $request->session()->flash('success', 'The client was updated with success');
+                return redirect()->route('admin.companies.edit', [$company]);
+            }
+            $erros['company.update'] = __("There was an error updating company details");
+        }else{
+           $errors[] =  __('It wasn\'t possible to update the company');
+        }
+
+        return redirect()->back()->withErrors($errors)->withInput($data);
     }
 
     /**

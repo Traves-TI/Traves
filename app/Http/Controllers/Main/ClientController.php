@@ -129,8 +129,6 @@ class ClientController extends Controller
         }
 
         return redirect()->back()->withErrors($errors)->withInput($data);
-
-        
     }
 
     /**

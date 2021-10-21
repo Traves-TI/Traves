@@ -23,7 +23,9 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
         @auth
-            @include('admin.parts.sidebar')
+            @if(!isset($SHOW_SIDEBAR) OR $SHOW_SIDEBAR)
+                @include('admin.parts.sidebar')
+            @endif
         @endauth
         
 
