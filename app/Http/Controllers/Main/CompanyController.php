@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyValidationRequest;
 use App\Models\Company;
+use App\Models\CompanyUser;
+use App\Models\User;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class CompanyController extends Controller
@@ -40,8 +43,6 @@ class CompanyController extends Controller
             return redirect()->route('admin.companies.index', $request->except("page"));
         }
 
-
-        
         $companies = $companies->paginate($quant);
         return view('admin.companies.index', [
             'companies' => $companies,
@@ -68,13 +69,10 @@ class CompanyController extends Controller
     {
         $data = $request->except('_token');
 
-        $company = Company::create($data);
-
-        $errors = [];
+        $user = Auth::user();
+        $company = Company::create($data, $user);
+        
         if($company){
-
-            dd('Criar a relação entre a empresa e o utilizador');
-
             $request->session()->flash('success', 'The company was created with success');
             return redirect()->route('admin.companies.index');
         } else {
@@ -140,6 +138,13 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $nameCompany = $company->name;
+        $errors = [];
+        if($company->delete()){
+            session()->flash("success", __("The company: $nameCompany was deleted with success"));
+        }else{
+            $errors['companies.delete'] = __("It wasn\'t possible to delete the company: $nameCompany'");
+        }
+        return redirect()->back()->withErrors($errors);
     }
 }

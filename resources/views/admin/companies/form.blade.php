@@ -62,6 +62,7 @@
                             value='@isset($company){{ $company->vat_id }}@else{{ old('vat_id')}}@endisset'
                             placeholder="{{ __('VAT ID number') }}" 
                             class='form-control' 
+                            required
                             />
                     </div>
 
