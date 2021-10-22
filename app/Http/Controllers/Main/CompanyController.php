@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyValidationRequest;
 use App\Models\Company;
-use App\Models\CompanyUser;
-use App\Models\User;
-use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request as FacadesRequest;
+
 
 class CompanyController extends Controller
 {
@@ -23,7 +20,10 @@ class CompanyController extends Controller
     {
         $data = $request->all();
         $quant = 20;
-        $companies = Company::orderBy('name','ASC');
+        $user = Auth::user();
+        
+        $companies = ($user->level == 0) ? Company::orderBy('name','ASC') : $user->companies();
+      
         if(!empty($data)){
             if(isset($data["entries"]) and !empty($data["entries"])){
                 $quant = $data["entries"];
@@ -43,7 +43,8 @@ class CompanyController extends Controller
             return redirect()->route('admin.companies.index', $request->except("page"));
         }
 
-        $companies = $companies->paginate($quant);
+    
+        $companies = $companies->count() ? $companies->paginate($quant) : $companies;
         return view('admin.companies.index', [
             'companies' => $companies,
         ]);
@@ -120,6 +121,7 @@ class CompanyController extends Controller
             $res = $company->update($data);
             if($res){
                 $request->session()->flash('success', 'The client was updated with success');
+                // TODO Encaminhar utilizador para os produtos 
                 return redirect()->route('admin.companies.edit', [$company]);
             }
             $erros['company.update'] = __("There was an error updating company details");
