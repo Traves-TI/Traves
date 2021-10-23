@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Facades\DB;
 
 class Company extends Model
 {
+
+
     protected $table = "companies";
+    protected $company_table_prefix = "traves_";
 
     protected $fillable = ['name', 'phone', 'email','address','zip_code','city','vat_id','country'];
 
@@ -29,18 +33,27 @@ class Company extends Model
         $companyUser = CompanyUser::create(
             ["company_id" => $company->id, "user_id" => $user->id]
         );
+
         if($companyUser){
-            return $company;
+            $database = $company->createDB();
+            
+            if($database){
+                return $company;
+            } else {
+                $companyUser->delete();
+                $company->delete();
+                return false;
+            }
         }else{
             $company->delete();
             return false;
         }   
-
     }
-    
+
     public function delete(){
-        $delete = static::query()->delete();
+        $delete = parent::delete();
         if($delete){
+           $this->deleteDB();
            return CompanyUser::where("company_id", $this->id)->delete();
         }
             return false;
@@ -63,5 +76,12 @@ class Company extends Model
     }
 
 
+    public function createDB(){
+        return DB::statement('CREATE DATABASE IF NOT EXISTS ' . $this->company_table_prefix . $this->id);
+    }
+    
+    public function deleteDB(){
+        return DB::statement('DROP DATABASE IF EXISTS ' . $this->company_table_prefix . $this->id);
+    }
 
 }

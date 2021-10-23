@@ -45,7 +45,7 @@
                                         <td class="text-center">
                                                 <a title='{{ __('Select company') }}' class='btn btn-sm btn-warning display-inline-block' href=" {{ route('admin.companies.show', [$company->id]) }} " ><i class="fa fa-check"></i></a> 
                                                 <a title='{{ __('Edit company') }}' class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.companies.edit', [$company->id]) }} " ><i class="fa fa-edit"></i></a> 
-                                                <form data-confirm='{{ __("Are you sure that delete this company?") . $company->name }}' class='display-inline-block' method="POST" action="{{ route('admin.companies.destroy', $company->id) }}"> @csrf @method('DELETE') 
+                                                <form data-confirm='{{ __("Are you sure that delete :name?", ['name' => $company->name]) }}' class='display-inline-block' method="POST" action="{{ route('admin.companies.destroy', $company->id) }}"> @csrf @method('DELETE') 
                                                     <button title='{{ __('Delete company') }}' class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button>
                                                 </form>
                                         </td>
