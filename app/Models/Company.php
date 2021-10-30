@@ -40,7 +40,7 @@ class Company extends Model
             if($database){
                 return $company;
             } else {
-                $companyUser->delete();
+          
                 $company->delete();
                 return false;
             }
@@ -51,10 +51,16 @@ class Company extends Model
     }
 
     public function delete(){
-        $delete = parent::delete();
+
+        $companyUser = CompanyUser::where("company_id", $this->id)->delete();
+        
+        if($companyUser) {
+           $delete = parent::delete();
+        }
+
         if($delete){
            $this->deleteDB();
-           return CompanyUser::where("company_id", $this->id)->delete();
+           return true;
         }
             return false;
     }

@@ -18,6 +18,7 @@ class CreateCompanyUsers extends Migration
             $table->integer("company_id");
             $table->integer("user_id");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
