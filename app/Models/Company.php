@@ -40,7 +40,6 @@ class Company extends Model
             if($database){
                 return $company;
             } else {
-          
                 $company->delete();
                 return false;
             }
@@ -50,19 +49,93 @@ class Company extends Model
         }   
     }
 
-    public function delete(){
 
-        $companyUser = CompanyUser::where("company_id", $this->id)->delete();
+    public function delete2(){
+
+       $companyUser = CompanyUser::where("company_id", $this->id);
+       $parent = 1;
+       
+       $tasks = [
+           ['Obj' => $companyUser, 'Method' => 'delete'],
+           ['Obj' => $parent, 'Method' => 'delete'],
+             ['Obj' => $this,'Method' => 'deleteDB'],
+       ];
+
+        // Variable to control the proccess :D
+        $control = true;
+        // Our counter variable :P
+        $counter = 0;
+        // Total of tasks to be executed
+        $tasksTotal = count($tasks);
         
-        if($companyUser) {
-           $delete = parent::delete();
-        }
+        // While everything is ok
+        while ($counter != $tasksTotal){
+            
+            // Get the current item in array
+            $row = $tasks[$counter];
 
-        if($delete){
-           $this->deleteDB();
-           return true;
+            // if anything goes wrong and returns false
+            if(!call_user_func($row['Obj'], $row['Method'])){
+                // Changes control variable to false 
+                $control = false;
+                // Ends the while
+                break;
+            }
+            // Increments the variable :P
+            $counter++;
         }
+         
+        if($control) return true;
+         
+        while($counter >= 0){
+         
+             $row = $tasks[$counter];
+             
+             if(!call_user_func($row['Obj'], '<<')){
+                 break;
+             }  
+         
+             $counter--;
+         }
+         
+         if($counter == 0){
+            // tudo foi restaurado com sucesso
             return false;
+         } 
+         
+         // Alguma coisa deu errada nas restaurações
+         
+    }
+
+    public function delete(){
+        
+        $control = [];
+     
+        // Apaga as relações
+        $companyUser = CompanyUser::where("company_id", $this->id);
+        
+        if($companyUser){
+
+            $companyUser = $companyUser->delete();
+            
+            //Tenta apagar a company
+            $companyDelete = parent::delete();
+            
+            $deleteDB = false;
+            
+            // Verifica se a company foi apagada 
+            if($companyDelete){
+                // TODO- Criar rotina para eliminar as bds das empresas que foram deletadas após 30 dias 
+                return true; 
+            }else{
+                $companyUser = ($companyUser) ? CompanyUser::withTrashed()->find($this->id)->restore() : $companyUser;
+            }
+
+    }
+       
+        return false;
+       
+        
     }
 
     public function associate(User $user){
