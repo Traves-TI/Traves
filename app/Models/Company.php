@@ -109,8 +109,6 @@ class Company extends Model
 
     public function delete(){
         
-        $control = [];
-     
         // Apaga as relações
         $companyUser = CompanyUser::where("company_id", $this->id);
         
@@ -121,11 +119,9 @@ class Company extends Model
             //Tenta apagar a company
             $companyDelete = parent::delete();
             
-            $deleteDB = false;
-            
             // Verifica se a company foi apagada 
             if($companyDelete){
-                // TODO- Criar rotina para eliminar as bds das empresas que foram deletadas após 30 dias 
+                $this->deleteDB();
                 return true; 
             }else{
                 $companyUser = ($companyUser) ? CompanyUser::withTrashed()->find($this->id)->restore() : $companyUser;
@@ -156,11 +152,12 @@ class Company extends Model
 
 
     public function createDB(){
-        return DB::statement('CREATE DATABASE IF NOT EXISTS ' . $this->company_table_prefix . $this->id);
+        return CompanyDB::create($this->id);
     }
     
     public function deleteDB(){
-        return DB::statement('DROP DATABASE IF EXISTS ' . $this->company_table_prefix . $this->id);
+        return CompanyDB::where('company_id', '=', $this->id)->delete();
     }
+
 
 }
