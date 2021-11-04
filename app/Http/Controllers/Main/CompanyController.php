@@ -7,7 +7,7 @@ use App\Http\Requests\CompanyValidationRequest;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
@@ -68,6 +68,12 @@ class CompanyController extends Controller
      */
     public function store(CompanyValidationRequest $request)
     {
+
+        /*for($i=0;$i<=100;$i++){
+            DB::statement("DROP DATABASE IF EXISTS traves_{$i}");
+        }
+        dd('LOrem');
+        */
         $data = $request->except('_token');
 
         $user = Auth::user();

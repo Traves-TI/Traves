@@ -16,47 +16,36 @@ class CompanyDB extends Model
     
     protected $table = 'company_dbs'; 
     protected $fillable = ['company_id', 'db_name'];
+    protected $dispatchesEvents = [
+        'retrieved' => \App\Events\CompanyDbRetrieved::class,
+    ];
+
+
     private $conn = null;
+
+//    private $database = null;
+
     private $models = [
         Client::class,
         Product::class
     ];
 
-    
-    public function __construct(){
-        parent::__construct();
-        if($this->id){
-            dd("o");
-        }
-        $db = $this->getDB();
-        if($db) $this->conn = $db;
-        return $this;
-    }
-
-/*
-    static function getDB($db_name = null){
-        
-        $backtrace = debug_backtrace();
-        if(is_null($db_name) and $backtrace[1]["type"] != '::'){
-            if(isset($this->db_name)) {
-                $db_name = $this->db_name;
-            }
-            else {
-                return false;
-            }
-        }
-        
-        $db = Schema::connection($db_name);
-        if($db) return $db;
-        return false;
-    }
-*/
-
     public function getDB(){
-        
         if(!$this->id) return false;
-        dd($this->db_name);
-        return Schema::connection($this->db_name);
+
+        config(['database.connections.traves_db' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST'),
+            'database'  =>  'traves_2', //$this->db_name,
+            'username'  => env('DB_USERNAME'),
+            'password'  => env('DB_PASSWORD'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ]]);
+
+        return Schema::connection('traves_db');
     }
 
     static function create($company_id){
@@ -77,18 +66,20 @@ class CompanyDB extends Model
                 'db_name' => $db_name,
             ]
         );
-
         
        if(!$self->save()){
           DB::statement("DROP DATABASE IF EXISTS {$db_name}");
           return false;
        }else{
-          
+
+        
+         $self->copyTables();
+
          $companyDB = self::find($self->id);
-            dd($companyDB->id);
-            return $companyDB;
+         return $companyDB;
        }
         
+       return false;
 
     }
 
@@ -99,7 +90,6 @@ class CompanyDB extends Model
         // TODO - pegar todo que ta com o coiso do deleted_at != null e deletar
         */ 
     }
-
 
 
     public function copySchemas(){
@@ -113,12 +103,36 @@ class CompanyDB extends Model
                 $value = (array)$value;
                 $table_names[$model->getTable()] = $value["Create Table"];
             }
-            
-            
-            
         }
       
-        dd($table_names);
+        return $table_names;   
+    }
+
+    public function copyTables(){
+        $db = $this->getDB();
+        if(!$db) return false;
+        
+        $queries = $this->copySchemas();
+        if(empty($queries)) return false;
+
+
+
+        $debug = [];
+        foreach($queries as $query) {
+
+            $debug[] = [
+                ((bool)$db->getConnection()->query($query)),
+                $query,
+            ];
+        }
+
+        
+
+        $pdo = $db->getConnection()->getRawPdo(); 
+        
+        $query = $pdo->prepare('select * from livia');
+        dd($query);
+        dd($debug);
         
     }
 
