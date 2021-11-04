@@ -22,7 +22,7 @@ class CompanyDbRetrieved
      */
     public function __construct(CompanyDB $companyDB)
     {
-       // dd($companyDB->getDB());
+       $companyDB->setDB();
     }
 
     /**

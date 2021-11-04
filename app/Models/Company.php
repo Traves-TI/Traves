@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
+use App\Models\CompanyDB;
 
 class Company extends Model
 {
@@ -157,6 +158,10 @@ class Company extends Model
     
     public function deleteDB(){
         return CompanyDB::where('company_id', '=', $this->id)->delete();
+    }
+
+    public function getDB(){
+        dd($this->hasOne(CompanyDB::class, 'company_id')->get()->first());
     }
 
 

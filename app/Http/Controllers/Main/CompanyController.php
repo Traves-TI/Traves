@@ -8,6 +8,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class CompanyController extends Controller
 {
@@ -68,12 +69,14 @@ class CompanyController extends Controller
      */
     public function store(CompanyValidationRequest $request)
     {
+        /*
+            for($i=0;$i<=100;$i++){
+                DB::statement("DROP DATABASE IF EXISTS traves_{$i}");
+            }
 
-        /*for($i=0;$i<=100;$i++){
-            DB::statement("DROP DATABASE IF EXISTS traves_{$i}");
-        }
-        dd('LOrem');
+            dd('LOrem');
         */
+
         $data = $request->except('_token');
 
         $user = Auth::user();
@@ -98,6 +101,9 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
+        session(['company' => $company]);
+      
+        return redirect()->route("admin.clients.index");
         dd('Guardar em uma sessão global o ID da sessão e redirecionar para o index dos clientes');
     }
 

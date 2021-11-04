@@ -30,19 +30,35 @@ class CompanyDB extends Model
         Product::class
     ];
 
+    public function setDB(){
+        $this->conn = $this->getDB();
+    }
+
     public function getDB(){
+
         if(!$this->id) return false;
 
+        if(!is_null($this->conn) OR $this->conn) return $this->conn;
+
+
         config(['database.connections.traves_db' => [
-            'driver'    => 'mysql',
-            'host'      => env('DB_HOST'),
-            'database'  =>  'traves_2', //$this->db_name,
-            'username'  => env('DB_USERNAME'),
-            'password'  => env('DB_PASSWORD'),
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database'  =>  $this->db_name,
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
         ]]);
 
         return Schema::connection('traves_db');
@@ -116,24 +132,38 @@ class CompanyDB extends Model
         if(empty($queries)) return false;
 
 
-
         $debug = [];
         foreach($queries as $query) {
 
-            $debug[] = [
-                ((bool)$db->getConnection()->query($query)),
-                $query,
-            ];
+            try {
+
+                // try to execute the queries
+                $result = $db->getConnection()->statement(DB::raw($query));
+                // store the results and the queries for debug :P
+                $debug[] = [
+                    ((bool)$result),
+                    $query,
+                ];
+
+            } catch(\Illuminate\Database\QueryException $e){
+                // In case of an exceotion we store the message and the query
+                $debug[] = [false, ($e->getMessage()), $query];
+            }
+
+           
         }
 
-        
+        //TODO we neeeeeed to check if the tables were created with no fail, because in case of a table that do not is created, the system will be corrupted. SO we need to rollback everything D:
+            /*
+        foreach($debug as $row){
+            if(!isset($row[0]) OR $row[0] == false){
+                dd($debug); break;
+            }
+        }
 
-        $pdo = $db->getConnection()->getRawPdo(); 
-        
-        $query = $pdo->prepare('select * from livia');
-        dd($query);
         dd($debug);
-        
+*/
+
     }
 
 }
