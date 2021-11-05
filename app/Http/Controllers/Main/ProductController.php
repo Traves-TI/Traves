@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductType;
+use App\Models\Status;
+use App\Models\Tax;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -15,7 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        dd("oi");
+        $products = Product::all()?:null;
+        return view('products.index');
+
     }
 
     /**
@@ -25,7 +30,13 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        
+        
+        $taxes = Tax::all()?:null;
+        $product_type = ProductType::all()?:null;
+        $status = Status::all()?:null;
+        
+        return view("admin.products.create", ['taxes' => $taxes, 'product_type' => $product_type, 'status' =>  $status]);
     }
 
     /**
