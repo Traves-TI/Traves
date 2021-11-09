@@ -17,7 +17,7 @@
                             <label>{{__('Items per page')}}  
                                 <select name="dataTable_length" class="custom-select custom-select-sm form-control form-control-sm display-inline-block">
                                     <?
-                                        $entries = [10, 25, 50, 100];
+                                        $entries = [20, 50, 100];
                                         foreach ($entries as $value) {
                                             $op = ((isset($_GET["entries"]) and in_array($_GET["entries"], $entries)) and $value == $_GET["entries"]) ? "selected" : "";
                                             echo "<option value='{$value}' $op>$value</option>";
