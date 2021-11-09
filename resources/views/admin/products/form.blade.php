@@ -49,9 +49,10 @@
                     </div>
                     
                     <div class='col col-md-4 col-sm-12'>
-                        <input type='text' 
+                        <input type='number' 
+                            min='0'
                             name='quantity' 
-                            value='@isset($product){{ $product->quantity }}@else{{ old('quantity')}}@endisset'
+                            value='@isset($product){{ $product->quantity }}@else{{ old('quantity', 1)}}@endisset'
                             placeholder="{{ __('Quantity') }}" 
                             class='form-control' 
                             />
@@ -73,7 +74,7 @@
                         <select name='Tax_id' 
                                 class='form-control'
                                 required>
-                            <option value=''>Choose a tax</option>
+                            <option disabled>Choose a tax</option>
                             @if (isset($taxes))
                                 @foreach ($taxes as $tax)
                                     <option value='{{ $tax->id }}'>{{ $tax->value . "% - " . $tax->name }}</option>
@@ -85,7 +86,7 @@
                         <select name='status_id' 
                         class='form-control'
                         required>
-                            <option value=''>Choose a status</option>
+                            <option disabled>Choose a status</option>
                             @if (isset($status))
                                 @foreach ($status as $s)
                                     <option value='{{ $s->id }}'>{{ $s->name }}</option>

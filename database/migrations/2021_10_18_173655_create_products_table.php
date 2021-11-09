@@ -18,14 +18,14 @@ class CreateProductsTable extends Migration
             $table->string("name");
             $table->string("description")->nullable();
             $table->decimal("price", 6, 2)->default(0);
-            $table->integer("quantity");
-            $table->string("cover");
-            $table->string("image");
-            $table->string("reference");
+            $table->integer("quantity")->default(0);
+            $table->string("cover")->nullable();
+            $table->string("image")->nullable();
+            $table->string("reference")->nullable();
             $table->string("slug")->unique();
-            $table->integer("tax_id");
-            $table->integer("status_id");
-            $table->integer("product_type_id");
+            $table->integer("tax_id")->default(0);
+            $table->integer("status_id")->default(1);
+            $table->integer("product_type_id")->nullable();
             $table->timestamps();
             $table->softDeletes();
 

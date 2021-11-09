@@ -8,6 +8,7 @@ use App\Models\ProductType;
 use App\Models\Status;
 use App\Models\Tax;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -47,7 +48,25 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->except('_token');
+
+        //TODO The model should store and return a value using the Str:slug when the slug is empty
+        if(!isset($data['slug']) AND isset($data['name'])){
+            $data['slug'] = Str::slug($data['name'], "-");
+        }
+
+        $product = Product::create($data);
+
+        $errors = [];
+        if($product){
+            $request->session()->flash('success', 'The product was created with success');
+            return redirect()->route('admin.products.index');
+        } else {
+           
+            $errors['product.create'] = __('It wasn\'t possible to create a product');
+        }
+
+        return redirect()->back()->withErrors($errors)->withInput($data);
     }
 
     /**
