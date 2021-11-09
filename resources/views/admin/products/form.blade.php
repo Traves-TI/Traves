@@ -121,7 +121,7 @@
             <div class='row form-group'>
                 <div class='col-md-12'>
                     <button class='btn btn-success'>
-                        @isset($user)
+                        @isset($product)
                         {{ __('Save') }}
                     @else
                         {{ __ ('Submit') }}
