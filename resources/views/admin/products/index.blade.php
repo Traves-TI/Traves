@@ -4,6 +4,7 @@
 @section('content') 
 
 @include('admin.parts.alerts')
+
 <div class="table-responsive">
 
     <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -17,7 +18,7 @@
                             <label>{{__('Items per page')}}  
                                 <select name="dataTable_length" class="custom-select custom-select-sm form-control form-control-sm display-inline-block">
                                     <?
-                                        $entries = [10, 25, 50, 100];
+                                        $entries = [20, 50, 100];
                                         foreach ($entries as $value) {
                                             $op = ((isset($_GET["entries"]) and in_array($_GET["entries"], $entries)) and $value == $_GET["entries"]) ? "selected" : "";
                                             echo "<option value='{$value}' $op>$value</option>";
@@ -49,9 +50,12 @@
                         
                             <thead>
                                 <tr role="row">
-                                    <th tabindex="0" rowspan="1" colspan="1" >{{ __('Name') }}</th>
-                                    <th tabindex="0" rowspan="1" colspan="1">{{ __('Email') }}</th>
-                                    <th tabindex="0" rowspan="1" colspan="1">{{ __('Phone') }}</th>
+                                    <th tabindex="0" rowspan="1" colspan="1" >{{ __('Reference') }}</th>
+                                    <th tabindex="0" rowspan="1" colspan="1">{{ __('Name') }}</th>
+                                    <th tabindex="0" rowspan="1" colspan="2">{{ __('Description') }}</th>
+                                    <th tabindex="0" rowspan="1" colspan="1">{{ __('Price') }}</th>
+                                    <th tabindex="0" rowspan="1" colspan="1">{{ __('Quantity') }}</th>
+                                    <th tabindex="0" rowspan="1" colspan="1">{{ __('Tax') }}</th>
                                     <th tabindex="0" rowspan="1" class="text-center" colspan="1"> {{ __('Operations') }} </th>
                                 </tr>
                             </thead>
@@ -62,9 +66,12 @@
                             @foreach($products as $product)
                                 
                                 <tr class="odd">
-                                    <td >{{ $product->name }}</td>
-                                    <td>{{ $product->email }}</td>
-                                    <td>{{ $product->phone }}</td>
+                                    <td>{{ $product->reference }}</td>
+                                    <td>{{ $product->name }}</td>
+                                    <td colspan='2'>{{ $product->Description }}</td>
+                                    <td>@if(isset($product->price) AND !is_null($product->price)){{ $product->price }} € @else 0.00 € @endif</td>
+                                    <td>{{ $product->quantity }}</td>
+                                    <td>{{ $product->tax }}</td>
                                     <td class="text-center">
                                             <a class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.products.edit', [$product->id]) }} " ><i class="fa fa-edit"></i></a> 
                                             <form data-confirm='{{__("Are you sure that delete this product?") . $product->name}}' class='display-inline-block' method="POST" action="{{ route('admin.products.destroy', $product->id) }}"> @csrf @method('DELETE') <button class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button></form>

@@ -20,11 +20,13 @@ class ClientController extends Controller
         $data = $request->all();
         $quant = 20;
         $clients = Client::orderBy('name','ASC');
+
         if(!empty($data)){
             if(isset($data["entries"]) and !empty($data["entries"])){
                 $quant = $data["entries"];
             }
             
+            //TODO we have to make this search more useful :D
             if(isset($_GET["search"])){
                 if(!empty($_GET["search"])){
                     $clients = $clients->where("name", 'like', '%' . $data["search"] . '%');
@@ -39,9 +41,8 @@ class ClientController extends Controller
             return redirect()->route('admin.clients.index', $request->except("page"));
         }
 
-
-        
         $clients = $clients->paginate($quant);
+ 
         return view('admin.clients.index', [
             'clients' => $clients,
         ]);

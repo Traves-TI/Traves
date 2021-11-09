@@ -17,10 +17,38 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all()?:null;
-        return view('products.index');
+        $data = $request->all();
+        $quant = 20;
+        $products = Product::orderBy('name','ASC');
+
+        if(!empty($data)){
+            if(isset($data["entries"]) and !empty($data["entries"])){
+                $quant = $data["entries"];
+            }
+            
+            //TODO we have to make this search a bit more useful :D
+            if(isset($_GET["search"])){
+                if(!empty($_GET["search"])){
+                    $products = $products->where("name", 'like', '%' . $data["search"] . '%');
+                }else{
+                    return redirect()->route('admin.products.index');
+                }
+
+            }
+        }
+
+        if(isset($_GET["entries"]) and isset($_GET["page"]) and $_GET["entries"] > $products->count()){
+            return redirect()->route('admin.clients.index', $request->except("page"));
+        }
+
+        $products = $products->paginate($quant);
+
+        //TODO show the thumbnails in the view :P
+        return view('admin.products.index', [
+            'products' => $products,
+        ]);
 
     }
 
@@ -55,6 +83,7 @@ class ProductController extends Controller
             $data['slug'] = Str::slug($data['name'], "-");
         }
 
+        //TODO We have to store the images URL in the database if it was uploaded :D
         $product = Product::create($data);
 
         $errors = [];

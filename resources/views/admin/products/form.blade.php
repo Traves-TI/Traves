@@ -44,7 +44,6 @@
                             value='@isset($product){{ $product->description }}@else{{ old('description')}}@endisset'
                             placeholder="{{ __('Description') }}" 
                             class='form-control mask-description' 
-                            required
                             />
                     </div>
                     
@@ -96,9 +95,8 @@
                     </div>
                     <div class='col-md-4 col-sm-12'>       
                         <select name='product_type' 
-                        class='form-control'
-                        required>
-                            <option value=''>Choose a product type</option>
+                        class='form-control'>
+                            <option value=''>{{__('Normal')}}</option>
                             @if (isset($product_type))
                                 @foreach ($product_type as $pt)
                                     <option value='{{ $pt->id }}'>{{ $pt->name }}</option>
