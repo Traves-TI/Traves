@@ -18,11 +18,10 @@ class CompanyIsSelected
     {
         
         if(session()->has('company')){
-
+       
             $company = session()->get('company');
             $db_name = ENV('DB_PREFIX', 'traves_') . $company->id;
-            
-
+  
             Config::set('database.connections.traves_db.database', $db_name); 
 
         }

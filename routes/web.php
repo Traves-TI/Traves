@@ -29,11 +29,12 @@ Route::group(['middleware' => ['auth']], function(){
     
     Route::get("/admin", 'Main\DashboardController@index')->name('admin.dashboard');
 
-    Route::name("admin.")->group(function(){
+    Route::name("admin.")->prefix('admin')->group(function(){
 
         Route::resource('/companies', Main\CompanyController::class);
         
         Route::group(['middleware' => ['companyIsSelected']], function(){
+           
             Route::resource('/clients', Main\ClientController::class);
             Route::resource('/products', Main\ProductController::class);
             
