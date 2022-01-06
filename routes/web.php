@@ -32,13 +32,11 @@ Route::group(['middleware' => ['auth']], function(){
     Route::name("admin.")->prefix('admin')->group(function(){
 
         Route::resource('/companies', Main\CompanyController::class);
-        
-        Route::group(['middleware' => ['companyIsSelected']], function(){
-           
-            Route::resource('/clients', Main\ClientController::class);
-            Route::resource('/products', Main\ProductController::class);
-            
-        });
+
+        // Rotas dos modelos loucões
+        Route::resource('/clients', Main\ClientController::class);
+        Route::resource('/products', Main\ProductController::class);
+      
     });
 
 });

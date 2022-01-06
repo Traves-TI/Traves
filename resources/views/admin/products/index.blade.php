@@ -50,7 +50,7 @@
                         
                             <thead>
                                 <tr role="row">
-                                    <th tabindex="0" rowspan="1" colspan="1" >{{ __('Reference') }}</th>
+                                    <th tabindex="0" rowspan="1"git >{{ __('Reference') }}</th>
                                     <th tabindex="0" rowspan="1" colspan="1">{{ __('Name') }}</th>
                                     <th tabindex="0" rowspan="1" colspan="2">{{ __('Description') }}</th>
                                     <th tabindex="0" rowspan="1" colspan="1">{{ __('Price') }}</th>
@@ -73,7 +73,7 @@
                                     <td>{{ $product->quantity }}</td>
                                     <td>{{ $product->tax }}</td>
                                     <td class="text-center">
-                                            <a class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.products.edit', [$product->id]) }} " ><i class="fa fa-edit"></i></a> 
+                                            <a class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.products.edit', [$product]) }} " ><i class="fa fa-edit"></i></a> 
                                             <form data-confirm='{{__("Are you sure that delete this product?") . $product->name}}' class='display-inline-block' method="POST" action="{{ route('admin.products.destroy', $product->id) }}"> @csrf @method('DELETE') <button class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button></form>
                                     </td>
                                 </tr>

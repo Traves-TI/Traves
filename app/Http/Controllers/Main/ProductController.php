@@ -12,6 +12,15 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+
+    // Atributo para receber um objeto do tipo Product. Quando for iniciado um new ProductController(new Product()) automaticaticamente ser instanciado um obj do tipo Product [Que é o meu model]
+  /*  private $product;
+
+    public function __construct(Product $product){
+     
+            $this->product = $product; 
+    }
+*/
     /**
      * Display a listing of the resource.
      *
@@ -59,11 +68,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        
-        
         $taxes = Tax::all()?:null;
         $product_type = ProductType::all()?:null;
         $status = Status::all()?:null;
+        
         
         return view("admin.products.create", ['taxes' => $taxes, 'product_type' => $product_type, 'status' =>  $status]);
     }
@@ -117,7 +125,17 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view("admin.products.edit", ["product" => $product]);
+        $taxes = Tax::all()?:null;
+        $product_type = ProductType::all()?:null;
+        $status = Status::all()?:null;
+        
+        $product = Product::find($product)->first();
+        
+        return view("admin.products.edit", [
+            "product" => $product, 
+            "taxes" => $taxes, 
+            "product_type" => $product_type
+        ]);
     }
 
     /**

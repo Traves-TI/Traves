@@ -101,10 +101,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        session(['company' => $company]);
-      
-        return redirect()->route("admin.clients.index");
-        dd('Guardar em uma sessão global o ID da sessão e redirecionar para o index dos clientes');
+        return redirect()->route("admin.clients.index")->withCookies([cookie('company',$company->id)]);
     }
 
     /**

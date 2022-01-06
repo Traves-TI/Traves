@@ -25,6 +25,7 @@ class CompanyDB extends Model
 
 //    private $database = null;
 
+    // Modelos loucões que terão as tabelas copiadas
     private $models = [
         Client::class,
         Product::class

@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
+
+    public function __construct()
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +21,6 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
-
         $data = $request->all();
         $quant = 20;
         $clients = Client::orderBy('name','ASC');

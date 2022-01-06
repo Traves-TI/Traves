@@ -69,11 +69,13 @@
                 </div>
 
               <div class="row form-group">
-                    <div class='col-md-4 col-sm-12'>       
+                    <div class='col-md-4 col-sm-12'>
+      
                         <select name='Tax_id' 
                                 class='form-control'
                                 required>
                             <option disabled>Choose a tax</option>
+                       
                             @if (isset($taxes))
                                 @foreach ($taxes as $tax)
                                     <option value='{{ $tax->id }}'>{{ $tax->value . "% - " . $tax->name }}</option>
