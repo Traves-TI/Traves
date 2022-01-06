@@ -52,7 +52,6 @@
                                 <tr role="row">
                                     <th tabindex="0" rowspan="1"git >{{ __('Reference') }}</th>
                                     <th tabindex="0" rowspan="1" colspan="1">{{ __('Name') }}</th>
-                                    <th tabindex="0" rowspan="1" colspan="2">{{ __('Description') }}</th>
                                     <th tabindex="0" rowspan="1" colspan="1">{{ __('Price') }}</th>
                                     <th tabindex="0" rowspan="1" colspan="1">{{ __('Quantity') }}</th>
                                     <th tabindex="0" rowspan="1" colspan="1">{{ __('Tax') }}</th>
@@ -68,7 +67,6 @@
                                 <tr class="odd">
                                     <td>{{ $product->reference }}</td>
                                     <td>{{ $product->name }}</td>
-                                    <td colspan='2'>{{ $product->Description }}</td>
                                     <td>@if(isset($product->price) AND !is_null($product->price)){{ $product->price }} € @else 0.00 € @endif</td>
                                     <td>{{ $product->quantity }}</td>
                                     <td>{{ $product->tax }}</td>

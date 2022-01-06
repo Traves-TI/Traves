@@ -8,19 +8,12 @@ use App\Models\ProductType;
 use App\Models\Status;
 use App\Models\Tax;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
 
-    // Atributo para receber um objeto do tipo Product. Quando for iniciado um new ProductController(new Product()) automaticaticamente ser instanciado um obj do tipo Product [Que é o meu model]
-  /*  private $product;
-
-    public function __construct(Product $product){
-     
-            $this->product = $product; 
-    }
-*/
     /**
      * Display a listing of the resource.
      *
@@ -31,6 +24,7 @@ class ProductController extends Controller
         $data = $request->all();
         $quant = 20;
         $products = Product::orderBy('name','ASC');
+
 
         if(!empty($data)){
             if(isset($data["entries"]) and !empty($data["entries"])){
@@ -72,7 +66,6 @@ class ProductController extends Controller
         $product_type = ProductType::all()?:null;
         $status = Status::all()?:null;
         
-        
         return view("admin.products.create", ['taxes' => $taxes, 'product_type' => $product_type, 'status' =>  $status]);
     }
 
@@ -85,24 +78,26 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $request->except('_token');
-
-        //TODO The model should store and return a value using the Str:slug when the slug is empty
+        
         if(!isset($data['slug']) AND isset($data['name'])){
-            $data['slug'] = Str::slug($data['name'], "-");
+            $data['slug'] = Product::getSlug($data["name"]);
         }
 
         //TODO We have to store the images URL in the database if it was uploaded :D
-        $product = Product::create($data);
-
         $errors = [];
-        if($product){
-            $request->session()->flash('success', 'The product was created with success');
-            return redirect()->route('admin.products.index');
-        } else {
-           
-            $errors['product.create'] = __('It wasn\'t possible to create a product');
+        if($data['slug']){
+            $product = Product::create($data);
+            if($product){
+                $request->session()->flash('success', 'The product was created with success');
+                return redirect()->route('admin.products.index');
+            } else {
+            
+                $errors['product.create'] = __('It wasn\'t possible to create a product');
+            }
+        }else{
+            $errors['product.slugAlreadyExists'] = __('It wasn\'t possible to create a product, there a product with the same name');
         }
-
+    
         return redirect()->back()->withErrors($errors)->withInput($data);
     }
 
@@ -130,11 +125,12 @@ class ProductController extends Controller
         $status = Status::all()?:null;
         
         $product = Product::find($product)->first();
-        
+       
         return view("admin.products.edit", [
             "product" => $product, 
             "taxes" => $taxes, 
-            "product_type" => $product_type
+            "product_type" => $product_type,
+            "status" => $status
         ]);
     }
 
@@ -147,7 +143,23 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $newProduct = $request->all();
+        
+        if(!empty($newProduct)){
+            $newProduct = $request->except("_method", "_token");
+            
+            if($product and $product->update($newProduct)){
+                $request->session()->flash('success', 'The product was edited with success');
+                return redirect()->back()->withInput($newProduct);
+            }
+
+         } else {
+           
+            $errors['product.edit'] = __('It wasn\'t possible to edit a product');
+        }
+
+        return redirect()->back()->withErrors($errors)->withInput($newProduct);
+
     }
 
     /**

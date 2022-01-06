@@ -70,19 +70,18 @@
 
               <div class="row form-group">
                     <div class='col-md-4 col-sm-12'>
-      
-                        <select name='Tax_id' 
+                        <select name='tax_id' 
                                 class='form-control'
                                 required>
                             <option disabled>Choose a tax</option>
-                       
                             @if (isset($taxes))
                                 @foreach ($taxes as $tax)
-                                    <option value='{{ $tax->id }}'>{{ $tax->value . "% - " . $tax->name }}</option>
+                                    <option value='{{ $tax->id }}' @if(isset($product) and @$tax->id == $product->tax_id) selected @endif >{{ $tax->value . "% - " . $tax->name }}</option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
+                    
                     <div class='col-md-4 col-sm-12'>      
                         <select name='status_id' 
                         class='form-control'
@@ -90,18 +89,19 @@
                             <option disabled>Choose a status</option>
                             @if (isset($status))
                                 @foreach ($status as $s)
-                                    <option value='{{ $s->id }}'>{{ $s->name }}</option>
+                                    <option value='{{ $s->id }}' @if(isset($product) and @$s->id == $product->status_id) selected @endif >{{ $s->name }}</option>
                                 @endforeach
                             @endif
                         </select> 
                     </div>
-                    <div class='col-md-4 col-sm-12'>       
-                        <select name='product_type' 
+                    <div class='col-md-4 col-sm-12'>  
+                        <select name='product_type_id' 
                         class='form-control'>
                             <option value=''>{{__('Normal')}}</option>
                             @if (isset($product_type))
                                 @foreach ($product_type as $pt)
-                                    <option value='{{ $pt->id }}'>{{ $pt->name }}</option>
+                                    <option value='{{ $pt->id }}' @if(isset($product) and @$pt->id == $product->product_type_id) selected @endif>{{ $pt->name }}</option>
+
                                 @endforeach
                             @endif
                         </select> 
