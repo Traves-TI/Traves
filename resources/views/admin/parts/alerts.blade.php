@@ -1,5 +1,5 @@
   
-// TODO - os alerts não estão funcionando
+ 
    @if ($errors->any())
     <div class="alert alert-danger">
         <ul>

@@ -10,7 +10,7 @@ use App\Models\Tax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-
+//TODO - os alerts não estão funcionando
 class ProductController extends Controller
 {
 

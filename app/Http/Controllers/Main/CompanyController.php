@@ -130,8 +130,7 @@ class CompanyController extends Controller
             $res = $company->update($data);
             if($res){
                 $request->session()->flash('success', 'The client was updated with success');
-                // TODO Encaminhar utilizador para os produtos 
-                return redirect()->route('admin.companies.edit', [$company]);
+               return redirect()->route('admin.products.index');
             }
             $erros['company.update'] = __("There was an error updating company details");
         }else{

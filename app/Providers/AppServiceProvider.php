@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -11,6 +12,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,16 +34,27 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
       
-     // Cookie for to recover company id and after connect the databse of current company 
-     $arrCompanyID = explode('|', Crypt::decrypt(Cookie::get('company'), false));
-     
-     $company_id = end($arrCompanyID);
+        // Check is Cookie exist
+        if(!is_null(Cookie::get('company'))){
+            
+            // Cookie for to recover company id and after connect the databse of current company 
+            try{
+                $arrCompanyID = explode('|', Crypt::decrypt(Cookie::get('company'), false));
+            }catch(DecryptException $e){
 
-     if($company_id){
-        $db_name = ENV('DB_PREFIX', 'traves_') . $company_id;     
-        Config::set('database.connections.traves_db.database', $db_name);
-     } 
+                return redirect()->back();
+            }
+                if(is_array($arrCompanyID)){
 
+                $company_id = end($arrCompanyID);
+
+                if($company_id){
+                    $db_name = ENV('DB_PREFIX', 'traves_') . $company_id;     
+                    Config::set('database.connections.traves_db.database', $db_name);
+                }
+            } 
+
+        }
      // até aqui :D
         Schema::defaultStringLength(191);
 
