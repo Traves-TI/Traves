@@ -32,7 +32,7 @@
                             value='@isset($product){{ $product->name }}@else{{ old('name') }}@endisset'
                             placeholder="{{ __('Name') }}" 
                             class='form-control' 
-                            _required
+                            required
                             />
                     </div>
                 </div>
@@ -110,13 +110,22 @@
                 </div>
 
                 
-                <div class="row form-group">
-                    <div class="col-md-6">
-                        <input class='form-control' type="file" name='cover' src="" alt="">
+                <div class="row ">
+                    <div class="col-md-6 form-group">
+                        <div class="custom-file">
+                            <label for="cover">Cover image</label>
+                            <input class='form-control-file btn btn-secondary' type="file" name='cover' src="" alt="" id='cover' >
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <input class='form-control' type="file" name='image' src="" alt="">
-                    </div>
+                    <div class="col-md-6 form-group">
+                            <div class="custom-file">
+                                <label for="image">Main image</label>
+                                <input type="file" class="btn btn-secondary form-control-file" name='image' id="image">
+                            </div>
+
+                        
+                      </div>
+
                 </div>
 
             <div class='row form-group'>
@@ -134,5 +143,6 @@
 
 
         </form>
+       
     </div>
 </div>

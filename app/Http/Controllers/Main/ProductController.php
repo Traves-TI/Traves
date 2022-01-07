@@ -8,7 +8,9 @@ use App\Models\ProductType;
 use App\Models\Status;
 use App\Models\Tax;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 //TODO - os alerts não estão funcionando
 class ProductController extends Controller
@@ -77,16 +79,46 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $errors = [];
         $data = $request->except('_token');
+        $company_id = "";
+        if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
         
+
         if(!isset($data['slug']) AND isset($data['name'])){
             $data['slug'] = Product::getSlug($data["name"]);
         }
+        
+        // If have any file
+        if(count($request->files)){
+            $MIMES = ["gif","png", "jpeg"]; 
 
-    
-        //TODO We have to store the images URL in the database if it was uploaded :D
-        $errors = [];
-        if($data['slug']){
+            foreach ($request->files as $key => $value) {
+                
+                $image = $request->file($key);
+
+                // Check mime type
+                if($image and array_search($image->extension(), $MIMES)){   
+                    // Path of folder of file
+                    $fileStorage = "/companies/$company_id/products";
+
+                    // Se for para ser um unico nome, alterar de storeAs para store
+                    $pathImage = $image->storeAs($fileStorage, $image->getClientOriginalName(), 'admin' );
+                    
+                    if(!is_null($pathImage)){
+                        $data[$key] = "images/" . $pathImage;
+                    }else{
+                        $errors["product.image.store"] = __("Occurs an error at image upload, please contact the administrator :D");
+                    }
+                }else{
+                    $errors["product.image"] = __('The type of file don\'t allow. Send file gif, png or jpeg');
+                }
+            }
+            
+        }
+
+  
+        if(isset($data['slug'])){
             $product = Product::create($data);
             if($product){
                 $request->session()->flash('success', 'The product was created with success');
