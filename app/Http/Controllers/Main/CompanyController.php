@@ -23,6 +23,7 @@ class CompanyController extends Controller
         $quant = 20;
         $user = Auth::user();
         
+      
         $companies = ($user->level == 0) ? Company::orderBy('name','ASC') : $user->companies();
       
         if(!empty($data)){
@@ -69,13 +70,7 @@ class CompanyController extends Controller
      */
     public function store(CompanyValidationRequest $request)
     {
-        /*
-            for($i=0;$i<=100;$i++){
-                DB::statement("DROP DATABASE IF EXISTS traves_{$i}");
-            }
-
-            dd('LOrem');
-        */
+        
 
         $data = $request->except('_token');
 
@@ -83,7 +78,8 @@ class CompanyController extends Controller
         $company = Company::create($data, $user);
         
         if($company){
-            $request->session()->flash('success', 'The company was created with success');
+            $nameCompany = $company->name;
+            $request->session()->flash('success', "The company: $nameCompany created with success");
             return redirect()->route('admin.companies.index');
         } else {
            
@@ -127,10 +123,13 @@ class CompanyController extends Controller
         $data = $request->except('_token');
         $erros = [];
         if($company){
+          
             $res = $company->update($data);
             if($res){
-                $request->session()->flash('success', 'The client was updated with success');
-               return redirect()->route('admin.products.index');
+                $nameCompany = $company->name;
+                $request->session()->flash('success', "The company: $nameCompany was deleted with success");
+                // TODO - Se o utilizador for criar mais empresas depois verificar qual o tipo de utilizador esta logado no index
+               return redirect()->route('admin.companies.index');
             }
             $erros['company.update'] = __("There was an error updating company details");
         }else{

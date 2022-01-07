@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -33,8 +34,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-      
-        // Check is Cookie exist
+     
+       // Check is Cookie exist
         if(!is_null(Cookie::get('company'))){
             
             // Cookie for to recover company id and after connect the databse of current company 

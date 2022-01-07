@@ -106,8 +106,9 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function edit(Client $client)
+    public function edit(Request $request, Client $client)
     {
+        //dd($request->session());
         return view("admin.clients.edit", ["client" => $client]);
     }
 

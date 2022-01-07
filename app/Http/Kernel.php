@@ -15,7 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
-        \Illuminate\Session\Middleware\StartSession::class,
+      //  \Illuminate\Session\Middleware\StartSession::class -> para funcionar os alertas
         \App\Http\Middleware\TrustProxies::class,
         \Fruitcake\Cors\HandleCors::class,
         \App\Http\Middleware\CheckForMaintenanceMode::class,
@@ -35,7 +35,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             // Descomentei aqui 
-            \Illuminate\Session\Middleware\AuthenticateSession::class,
+            //\Illuminate\Session\Middleware\AuthenticateSession::class,
             // **
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
@@ -44,8 +44,12 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
+    
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            /*\Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Session\Middleware\AuthenticateSession::class,*/
+            'throttle:60,1',
+        
         ],
     ];
 

@@ -25,7 +25,7 @@ class ProductController extends Controller
         $quant = 20;
         $products = Product::orderBy('name','ASC');
 
-
+ 
         if(!empty($data)){
             if(isset($data["entries"]) and !empty($data["entries"])){
                 $quant = $data["entries"];
@@ -83,6 +83,7 @@ class ProductController extends Controller
             $data['slug'] = Product::getSlug($data["name"]);
         }
 
+    
         //TODO We have to store the images URL in the database if it was uploaded :D
         $errors = [];
         if($data['slug']){

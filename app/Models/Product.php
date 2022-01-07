@@ -16,7 +16,7 @@ class Product extends Model
         $slug = Str::slug($slug, "-");
         $self = new self();
         
-        return ($self->all()->where("slug", $slug))?false:$slug;
+        return (is_null($self->all()->where("slug", $slug)->first()))?$slug:false;
     } 
 
 }
