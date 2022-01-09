@@ -111,10 +111,21 @@
 
                 
                 <div class="row ">
-                    <div class="col-md-6 form-group">
+                    
+                    <div class="custom-file col-md-6">
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">Choose cover image</label>
+                    </div>
+                    
+                    <div class="custom-file col-md-6">
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">Choose main image</label>
+                    </div>
+
+                   <!--  <div class="col-md-6 form-group">
                         <div class="custom-file">
                             <label for="cover">Cover image</label>
-                            <input class='form-control-file btn btn-secondary' type="file" name='cover' src="" alt="" id='cover' >
+                            <input class='form-control-file btn btn-secondary' type="file" name='cover' alt="" id='cover' lang="en">
                         </div>
                     </div>
                     <div class="col-md-6 form-group">
@@ -125,7 +136,7 @@
 
                         
                       </div>
-
+                      !-->
                 </div>
 
             <div class='row form-group'>

@@ -77,6 +77,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+     
     public function store(Request $request)
     {
         $errors = [];
@@ -84,11 +86,10 @@ class ProductController extends Controller
         $company_id = "";
         if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
         
-
         if(!isset($data['slug']) AND isset($data['name'])){
             $data['slug'] = Product::getSlug($data["name"]);
         }
-        
+
         // If have any file
         if(count($request->files)){
             $MIMES = ["gif","png", "jpeg"]; 
