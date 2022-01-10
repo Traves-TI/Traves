@@ -108,38 +108,27 @@
                     </div>
 
                 </div>
-
                 
-                <div class="row ">
-                    
-                    <div class="custom-file col-md-6">
-                        <input type="file" class="custom-file-input" id="customFile">
-                        <label class="custom-file-label" for="customFile">Choose cover image</label>
-                    </div>
-                    
-                    <div class="custom-file col-md-6">
-                        <input type="file" class="custom-file-input" id="customFile">
-                        <label class="custom-file-label" for="customFile">Choose main image</label>
-                    </div>
 
-                   <!--  <div class="col-md-6 form-group">
+                <div class="row form-group">
+                    <div class="col-md-6">
                         <div class="custom-file">
-                            <label for="cover">Cover image</label>
-                            <input class='form-control-file btn btn-secondary' type="file" name='cover' alt="" id='cover' lang="en">
+                            <input type="file" name='cover' class="custom-file-input" id="cover">
+                            <label class="custom-file-label" for="cover">{{__("Choose cover image")}}</label>
+                            <img class='previewImage img-thumbnail mt-10 mb-10' width='150' hidden >
                         </div>
                     </div>
-                    <div class="col-md-6 form-group">
-                            <div class="custom-file">
-                                <label for="image">Main image</label>
-                                <input type="file" class="btn btn-secondary form-control-file" name='image' id="image">
-                            </div>
-
-                        
-                      </div>
-                      !-->
+              
+                <div class="col-md-6">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name='image' id="image">
+                        <label class="custom-file-label" for="image">{{__("Choose main image")}}</label>
+                        <img  class='previewImage img-thumbnail mt-10 mb-10 ' width='150' hidden>
+                    </div>
                 </div>
+            </div>
 
-            <div class='row form-group'>
+            <div class='row text-right  ' >
                 <div class='col-md-12'>
                     <button class='btn btn-success'>
                         @isset($product)
@@ -154,6 +143,22 @@
 
 
         </form>
-       
     </div>
 </div>
+
+
+    <script>
+
+        
+
+        /* Choose phase default input file for doc name */ 
+        $("input[type='file']").on("change", function(e){
+            $label = $(this).next("label");
+            $imageName = e.target.files[0].name;
+            
+            $(this).parent().find(".previewImage").removeAttr("hidden").attr("src",URL.createObjectURL(e.target.files[0]));
+            
+            $label.text($imageName);
+        });
+    </script>
+    

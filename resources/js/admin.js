@@ -16,4 +16,5 @@ $(function(){
        window.location = current_url; 
        
     });
+
 });

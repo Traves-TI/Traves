@@ -23,6 +23,14 @@
   margin-top: 20px;
 }
 
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
 .alert label {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;

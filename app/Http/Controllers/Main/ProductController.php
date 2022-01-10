@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-//TODO - os alerts não estão funcionando
+
 class ProductController extends Controller
 {
 
@@ -86,12 +86,14 @@ class ProductController extends Controller
         $company_id = "";
         if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
         
+        
         if(!isset($data['slug']) AND isset($data['name'])){
             $data['slug'] = Product::getSlug($data["name"]);
         }
-
+        
         // If have any file
         if(count($request->files)){
+          //  dd($request->files);
             $MIMES = ["gif","png", "jpeg"]; 
 
             foreach ($request->files as $key => $value) {
@@ -118,8 +120,7 @@ class ProductController extends Controller
             
         }
 
-  
-        if(isset($data['slug'])){
+        if($data['slug']){
             $product = Product::create($data);
             if($product){
                 $request->session()->flash('success', 'The product was created with success');
@@ -146,6 +147,7 @@ class ProductController extends Controller
         //
     }
 
+    /* TODO - recuperar a imagem na edição, mandar para a view e mostrar o nome eo preview da imagem */ 
     /**
      * Show the form for editing the specified resource.
      *
