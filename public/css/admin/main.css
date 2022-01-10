@@ -36,3 +36,7 @@
   margin-bottom: 0.25rem;
 }
 
+.maxHeight150 {
+  max-height: 150px;
+}
+

@@ -108,6 +108,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
+        
         return view("admin.companies.edit", ["company" => $company]);
     }
 
@@ -127,7 +128,7 @@ class CompanyController extends Controller
             $res = $company->update($data);
             if($res){
                 $nameCompany = $company->name;
-                $request->session()->flash('success', "The company: $nameCompany was deleted with success");
+                $request->session()->flash('success', "The company: $nameCompany was updated with success");
                 // TODO - Se o utilizador for criar mais empresas depois verificar qual o tipo de utilizador esta logado no index
                return redirect()->route('admin.companies.index');
             }

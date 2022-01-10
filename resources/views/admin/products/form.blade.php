@@ -114,16 +114,19 @@
                     <div class="col-md-6">
                         <div class="custom-file">
                             <input type="file" name='cover' class="custom-file-input" id="cover">
-                            <label class="custom-file-label" for="cover">{{__("Choose cover image")}}</label>
-                            <img class='previewImage img-thumbnail mt-10 mb-10' width='150' hidden >
+                            
+                            <label class="custom-file-label" for="cover">@if(isset($product) and $product->cover) {{ $nameImgCover }} @else {{__("Choose cover image")}} @endif</label>
+                            <small><span class="text-danger">*{{__("Types: jpg, jpeg, gif, png | Max size: 2MB") }}</small></span>
+                            <p><img class='previewImage img-thumbnail mt-10 mb-10 maxHeight150' width='120' @if(isset($product) and $product->cover) src='{{asset($product->cover)}}' @else hidden @endif></p>
                         </div>
                     </div>
-              
-                <div class="col-md-6">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" name='image' id="image">
-                        <label class="custom-file-label" for="image">{{__("Choose main image")}}</label>
-                        <img  class='previewImage img-thumbnail mt-10 mb-10 ' width='150' hidden>
+                    
+                    <div class="col-md-6">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name='image' id="image">
+                            <label class="custom-file-label" for="image">@if(isset($product) and $product->image) {{ $nameImgMain }} @else {{__("Choose cover image")}} @endif</label>
+                            <small><span class="text-danger">*{{__("Types file: jpg, jpeg, gif, png | Max size: 2MB") }}</small></span>
+                            <p><img  class='previewImage img-thumbnail mt-10 mb-10 maxHeight150' width='120' @if(isset($product) and $product->image) src='{{asset($product->image)}}' @else hidden @endif></p>
                     </div>
                 </div>
             </div>
@@ -149,16 +152,56 @@
 
     <script>
 
+        let clicked=false;
+        let $file = $("input[type='file']");
         
+        function validator($file) {
+            
+            if($file == null) return false;
+            // Temos o file
+            $fileSize = Math.ceil($file.size / 1024 / 1024);
 
-        /* Choose phase default input file for doc name */ 
-        $("input[type='file']").on("change", function(e){
-            $label = $(this).next("label");
-            $imageName = e.target.files[0].name;
+        
+            if($fileSize > 2){
+                URL.revokeObjectURL($file);
+                alert("é graaaandeeee");
+                return false;
+            }
             
-            $(this).parent().find(".previewImage").removeAttr("hidden").attr("src",URL.createObjectURL(e.target.files[0]));
+            return true;
+        }
+        
+        /*
+        $file.on("click", function(e){
+            if(clicked){
+                validator(e.target.files[0]);
+                clicked = false;
+            }
+                clicked = true;
+
             
-            $label.text($imageName);
-        });
+        });*/
+
+        $file.on("click", function(e){
+        
+            if(!clicked){
+                $file.on("change", function(e){
+                    $fileUploaded = e.target.files[0];
+                    $("input[name='cover']").val("");
+                    
+                    if(validator($fileUploaded)){                        
+
+                        $fileURL = URL.createObjectURL($fileUploaded);
+                        $label = $(this).next("label");
+                        $imageName = $fileUploaded.name;
+                        $label.text($imageName);
+                        $(this).parent().find(".previewImage").removeAttr("hidden").attr("src",$fileURL);
+                    } 
+                });
+        }
+            clicked = true;
+          
+});  
+
     </script>
     

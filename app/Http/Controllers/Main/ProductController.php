@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Status;
 use App\Models\Tax;
+use Hamcrest\Arrays\IsArray;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
@@ -15,6 +16,7 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    
 
     /**
      * Display a listing of the resource.
@@ -93,46 +95,33 @@ class ProductController extends Controller
         
         // If have any file
         if(count($request->files)){
-          //  dd($request->files);
-            $MIMES = ["gif","png", "jpeg"]; 
-
+            $pathImage = "";
             foreach ($request->files as $key => $value) {
-                
-                $image = $request->file($key);
-
-                // Check mime type
-                if($image and array_search($image->extension(), $MIMES)){   
-                    // Path of folder of file
-                    $fileStorage = "/companies/$company_id/products";
-
-                    // Se for para ser um unico nome, alterar de storeAs para store
-                    $pathImage = $image->storeAs($fileStorage, $image->getClientOriginalName(), 'admin' );
-                    
-                    if(!is_null($pathImage)){
-                        $data[$key] = "images/" . $pathImage;
-                    }else{
-                        $errors["product.image.store"] = __("Occurs an error at image upload, please contact the administrator :D");
-                    }
+                $pathImage = Product::storeImg($request->file($key), $company_id);
+          
+                if(!is_array($pathImage)){
+                    $data[$key] = "images/" . $pathImage;
                 }else{
-                    $errors["product.image"] = __('The type of file don\'t allow. Send file gif, png or jpeg');
+                    array_push($errors, $pathImage);
                 }
             }
             
         }
-
-        if($data['slug']){
-            $product = Product::create($data);
-            if($product){
-                $request->session()->flash('success', 'The product was created with success');
-                return redirect()->route('admin.products.index');
-            } else {
-            
-                $errors['product.create'] = __('It wasn\'t possible to create a product');
+        if(empty($errors)){
+          
+            if($data['slug']){
+                $product = Product::create($data);
+                if($product){
+                    $request->session()->flash('success', 'The product was created with success');
+                    return redirect()->route('admin.products.index');
+                } else {
+                
+                    $errors['product.create'] = __('It wasn\'t possible to create a product');
+                }
+            }else{
+                $errors['product.slugAlreadyExists'] = __('It wasn\'t possible to create a product, there a product with the same name');
             }
-        }else{
-            $errors['product.slugAlreadyExists'] = __('It wasn\'t possible to create a product, there a product with the same name');
         }
-    
         return redirect()->back()->withErrors($errors)->withInput($data);
     }
 
@@ -147,7 +136,6 @@ class ProductController extends Controller
         //
     }
 
-    /* TODO - recuperar a imagem na edição, mandar para a view e mostrar o nome eo preview da imagem */ 
     /**
      * Show the form for editing the specified resource.
      *
@@ -156,17 +144,29 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+
         $taxes = Tax::all()?:null;
         $product_type = ProductType::all()?:null;
         $status = Status::all()?:null;
         
         $product = Product::find($product)->first();
-       
+        
+        $nameImgCover = $nameImgMain = "";
+    
+        $nameImgCover = (!is_null($product->cover)) ? explode('/', $product->cover) : null;
+        $nameImgMain = (!is_null($product->image)) ? explode('/', $product->image) : null;
+        
+        $nameImgCover = (!is_null($nameImgCover)) ? $nameImgCover[count($nameImgCover) - 1]:null;
+        $nameImgMain = (!is_null($nameImgMain)) ? $nameImgMain[count($nameImgMain) - 1]:null;
+         
         return view("admin.products.edit", [
             "product" => $product, 
             "taxes" => $taxes, 
             "product_type" => $product_type,
-            "status" => $status
+            "status" => $status,
+            "nameImgCover" => $nameImgCover,
+            "nameImgMain" => $nameImgMain,
+
         ]);
     }
 
@@ -179,21 +179,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $newProduct = $request->all();
+        $newProduct = $request->except(["_method", "_token"]);
+     
+        $company_id = "";
+        if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
         
-        if(!empty($newProduct)){
-            $newProduct = $request->except("_method", "_token");
-            
-            if($product and $product->update($newProduct)){
-                $request->session()->flash('success', 'The product was edited with success');
-                return redirect()->back()->withInput($newProduct);
-            }
-
-         } else {
-           
-            $errors['product.edit'] = __('It wasn\'t possible to edit a product');
+        $errors = [];
+        // If have any file
+        if(count($request->files)){
+                
+            $pathImage = "";
+            foreach ($request->files as $key => $value) {
+              if(!is_null($key)){
+                   $pathImage = Product::storeImg($request->file($key), $company_id);
+                   if(!is_array($pathImage)){
+                       $newProduct[$key] = "images/" . $pathImage;
+                    }else{
+                        
+                        array_push($errors, $pathImage);
+                    }
+                }
         }
+    }
 
+        if(empty($errors)){
+            if(!empty($newProduct)){
+         
+                if($product and $product->update($newProduct)){
+                    $request->session()->flash('success', 'The product was edited with success');
+                    return redirect()->back()->withInput($newProduct);
+                }
+
+            } else {
+            
+                $errors['product.edit'] = __('It wasn\'t possible to edit a product');
+            }
+      }
         return redirect()->back()->withErrors($errors)->withInput($newProduct);
 
     }
