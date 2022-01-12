@@ -8,6 +8,7 @@ use PhpParser\Node\Expr\Cast\Array_;
 
 class Product extends Model
 {
+  
     protected $connection = 'traves_db';
     protected $fillable = ['name', 'description', 'price', 'quantity', 'cover', 'image', 'reference', 'slug', 'tax_id', 'status_id', 'product_type_id'];
 
@@ -31,10 +32,11 @@ class Product extends Model
            
             // Path of folder of file
             $fileStorage = "/companies/$company_id/products";
+
+            
             // Se for para ser um unico nome, alterar de storeAs para store
             $pathImage = $image->storeAs($fileStorage, $image->getClientOriginalName(), 'admin' );
           
-            
             if(!is_null($pathImage)){
                 return $pathImage;
             }else{
@@ -44,6 +46,12 @@ class Product extends Model
             $errors["product.image"] = __('The type of file don\'t allow. Send file gif, png, jpg or jpeg');
         }
         return $errors;
+    }
+
+
+    static function deleteImageStorage($path){
+        dd($path);
+        
     }
 
 }

@@ -114,10 +114,15 @@
                     <div class="col-md-6">
                         <div class="custom-file">
                             <input type="file" name='cover' class="custom-file-input" id="cover">
-
                             <label class="custom-file-label" data-message='Choose cover image' for="cover">@if(isset($product) and $product->cover) {{ $nameImgCover }} @else {{__("Choose cover image")}} @endif</label>
                             <small><span class="text-danger errorImg">*{{__("Types: jpg, jpeg, gif, png | Max size: 2MB") }}</small></span>
-                            <p><img class='previewImage img-thumbnail mt-10 mb-10 maxHeight150' width='120' @if(isset($product) and $product->cover) src='{{asset($product->cover)}}' @else hidden @endif></p>
+                            
+                            <div class='containerImage' @if(!(isset($product)) or is_null($product->cover)) hidden @endif>
+                                <img class='imgPreview img-thumbnail mt-10 mb-10 maxHeight150' width='120' @if(isset($product) and $product->cover) src='{{asset("images/" . $product->cover)}}' @endif >
+                                <input type="hidden" name='hasCover' >
+                                <i class="imageDelete text-danger fa fa-trash" role="button" ></i>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -126,7 +131,11 @@
                             <input type="file" class="custom-file-input" name='image' id="image">
                             <label class="custom-file-label" data-message='Choose main image' for="image">@if(isset($product) and $product->image) {{ $nameImgMain }} @else {{__("Choose main image")}} @endif</label>
                             <small><span class="text-danger errorImg">*{{__("Types file: jpg, jpeg, gif, png | Max size: 2MB") }}</small></span>
-                            <p><img  class='previewImage img-thumbnail mt-10 mb-10 maxHeight150' width='120' @if(isset($product) and $product->image) src='{{asset($product->image)}}' @else hidden @endif></p>
+                            <div class='containerImage' @if(!(isset($product)) or is_null($product->image)) hidden @endif>
+                                <img class='imgPreview img-thumbnail mt-10 mb-10 maxHeight150' width='120' @if(isset($product) and $product->image) src='{{asset("images/" . $product->image)}}' @endif>
+                                <input type="hidden" name='hasImage' >
+                                <i class="imageDelete text-danger fa fa-trash" role="button"></i>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -134,7 +143,7 @@
 
             <div class='row text-right  ' >
                 <div class='col-md-12'>
-                    <button class='btn btn-success'>
+                    <button class='btn btn-success' id='btnSend'>
                         @isset($product)
                         {{ __('Save') }}
                     @else
@@ -149,64 +158,3 @@
         </form>
     </div>
 </div>
-
-
-    <script>
-
-        let clicked=false;
-        let $file = $("input[type='file']");
-
-        function validator($file) {
-            if($file == null || $file.size == null || $file.type == null) return false;
-         
-            $MIMES = ["gif","png", "jpeg", "jpg"]; 
-
-            // Temos o file
-            $fileSize = Math.ceil($file.size / 1024 / 1024);
-            $fileType = ($file.type).split("/");
-            $fileType = $fileType[$fileType.length - 1];
-            $message = "";
-            
-            if($fileSize > 2 || $MIMES.find(el => el === $fileType) == undefined){
-               
-                $message = ($fileSize > 2) ? '{{__("File size exceeds the limit allowed and cannot be saved")}}' + "</br>" : "";
-                $message += ($MIMES.find(el => el === $fileType) == undefined) ? '{{__("File type donts allowed and cannot be saved")}}': "";
-                $("[data-confirm]").data("confirm", $message).trigger("click");
-                return false;
-
-             
-            }
-          
-            return true;
-        }
-        /* Preview and front validation of image */
-                $file.on("change", function(e){
-                    $containerFile = $(this).parent();
-                    $previewImage = $containerFile.find(".previewImage");
-                    $label = $(this).next("label");
-                    $fileUploaded = e.target.files[0];
-                    $textError = $containerFile.find(".errorImg");
-
-                    /* Restart Fields*/ 
-                    $("input[name='cover']").val("");
-                    $previewImage.attr({"src": "", "hidden": "true"});
-                    $label.html($label.attr("data-message"));
-                    
-                    if($textError.hasClass("text-success")){
-                        $textError.removeClass("text-success").addClass("text-danger");
-                    }
-                   
-                     
-                    if(validator($fileUploaded)){
-                        $textError.removeClass("text-danger").addClass("text-success");
-                        $fileURL = URL.createObjectURL($fileUploaded);
-                        $imageName = $fileUploaded.name;
-                        $label.text($imageName);
-                        $previewImage.removeAttr("hidden").attr("src",$fileURL);
-                    }
-                   
-                });
-
-
-    </script>
-

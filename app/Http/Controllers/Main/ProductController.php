@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\HelperTrait;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Status;
@@ -16,8 +17,7 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    
-
+    Use HelperTrait;
     /**
      * Display a listing of the resource.
      *
@@ -179,32 +179,47 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $newProduct = $request->except(["_method", "_token"]);
-       
+        $COVER = $IMAGE = null;
+
+        $COVER = $request->input("hasCover");
+        $IMAGE = $request->input("hasImage");
+
+        $newProduct = $request->except(["_method", "_token", "hasCover", "hasImage"]);
+        
+        // se tiver nulo, verificar se o produto-> é nulo, se não for (apagar do storage e atribuir novo valor no produto-> como nulo)
+
         $company_id = "";
         if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
-        
+
         $errors = [];
         // If have any file
-        if(count($request->files)){
-
-            $pathImage = "";
-            foreach ($request->files as $key => $value) {
-              if(!is_null($key)){
-                   $pathImage = Product::storeImg($request->file($key), $company_id);
-                   if(!is_array($pathImage)){
-                       $newProduct[$key] = "images/" . $pathImage;
-                    }else{
-                        
-                        array_push($errors, $pathImage);
+      
+            if(count($request->files)){
+                $pathImage = "";
+                foreach ($request->files as $key => $value) {
+                
+                if(!is_null($key)){
+                    $pathImage = Product::storeImg($request->file($key), $company_id);
+                    if(!is_array($pathImage)){
+                        $newProduct[$key] = $pathImage;
+                        }else{
+                            array_push($errors, $pathImage);
+                        }
                     }
                 }
-        }
-    }
+             }else{
+                 if(is_null($COVER) and !(is_null($product->cover))){
+                    Storage::disk('admin')->delete($product->cover); 
+                    HelperTrait::deleteImageStorage($product->cover);
+                 }
+             }
+
+    
+          //   dd($newProduct, $product);
+
 
         if(empty($errors)){
             if(!empty($newProduct)){
-         
                 if($product and $product->update($newProduct)){
                     $request->session()->flash('success', 'The product was edited with success');
                     return redirect()->back()->withInput($newProduct);
