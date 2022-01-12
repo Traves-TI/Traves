@@ -37519,8 +37519,11 @@ $(function () {
 
   function restartFields($container, $image, $label) {
     var $textError = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-    $("input[name='cover']").val("");
+    $container.parent().find("input[type=file]").val("");
+    /*    $("input[name='cover']").val("");
     $("input[name='image']").val("");
+    */
+
     $container.attr("hidden", "true");
     $image.attr("src", "");
     $label.html($label.attr("data-message"));

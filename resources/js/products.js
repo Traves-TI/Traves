@@ -27,9 +27,12 @@ $(function(){
     }
 
     function restartFields($container, $image, $label, $textError = null){
-        $("input[name='cover']").val("");
+     
+        $container.parent().find("input[type=file]").val("");
+        
+        /*    $("input[name='cover']").val("");
         $("input[name='image']").val("");
-
+*/
         $container.attr("hidden", "true");
         $image.attr("src","");
         $label.html($label.attr("data-message"));
@@ -49,7 +52,7 @@ $(function(){
             $textError = $containerFile.find(".errorImg");
             $label = $(this).next("label");
             $fileUploaded = e.target.files[0];
-            
+
             if($fileUploaded){
                     if(validator($fileUploaded)){
                         $textError.removeClass("text-danger").addClass("text-success");

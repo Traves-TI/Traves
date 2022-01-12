@@ -114,7 +114,7 @@
                     <div class="col-md-6">
                         <div class="custom-file">
                             <input type="file" name='cover' class="custom-file-input" id="cover">
-                            <label class="custom-file-label" data-message='Choose cover image' for="cover">@if(isset($product) and $product->cover) {{ $nameImgCover }} @else {{__("Choose cover image")}} @endif</label>
+                            <label class="custom-file-label" data-message='Choose cover image' for="cover">{{__("Choose cover image")}} </label>
                             <small><span class="text-danger errorImg">*{{__("Types: jpg, jpeg, gif, png | Max size: 2MB") }}</small></span>
                             
                             <div class='containerImage' @if(!(isset($product)) or is_null($product->cover)) hidden @endif>
@@ -129,7 +129,7 @@
                     <div class="col-md-6">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" name='image' id="image">
-                            <label class="custom-file-label" data-message='Choose main image' for="image">@if(isset($product) and $product->image) {{ $nameImgMain }} @else {{__("Choose main image")}} @endif</label>
+                            <label class="custom-file-label" data-message='Choose main image' for="image">{{__("Choose main image")}}</label>
                             <small><span class="text-danger errorImg">*{{__("Types file: jpg, jpeg, gif, png | Max size: 2MB") }}</small></span>
                             <div class='containerImage' @if(!(isset($product)) or is_null($product->image)) hidden @endif>
                                 <img class='imgPreview img-thumbnail mt-10 mb-10 maxHeight150' width='120' @if(isset($product) and $product->image) src='{{asset("images/" . $product->image)}}' @endif>

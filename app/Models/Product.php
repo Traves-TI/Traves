@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use PhpParser\Node\Expr\Cast\Array_;
 
 class Product extends Model
 {
+    use SoftDeletes;
   
     protected $connection = 'traves_db';
     protected $fillable = ['name', 'description', 'price', 'quantity', 'cover', 'image', 'reference', 'slug', 'tax_id', 'status_id', 'product_type_id'];
@@ -22,20 +23,15 @@ class Product extends Model
         return (is_null($self->all()->where("slug", $slug)->first()))?$slug:false;
     } 
 
-    static function storeImg($image, $company_id){
-        if(is_null($image) or is_null($company_id)) return false;
+    static function storeImg($image, $pathStorage){
+        if(is_null($image) or is_null($pathStorage)) return false;
        
         $MIMES = ["gif","png", "jpeg", "jpg"]; 
 
         // Check mime type
         if($image and array_search($image->extension(), $MIMES)){   
            
-            // Path of folder of file
-            $fileStorage = "/companies/$company_id/products";
-
-            
-            // Se for para ser um unico nome, alterar de storeAs para store
-            $pathImage = $image->storeAs($fileStorage, $image->getClientOriginalName(), 'admin' );
+            $pathImage = $image->storeAs($pathStorage, $image->hashName(), 'admin' );
           
             if(!is_null($pathImage)){
                 return $pathImage;
@@ -49,9 +45,5 @@ class Product extends Model
     }
 
 
-    static function deleteImageStorage($path){
-        dd($path);
-        
-    }
 
 }

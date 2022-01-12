@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\Storage;
 trait HelperTrait{
 
         Static function DeleteImageStorage($path){
-            dd(Storage::disk("admin")->delete($path));
+            if(Storage::disk("admin")->exists($path)){
+                return Storage::disk("admin")->delete($path);
+            }
+            return false;
+            
         }
 
     }

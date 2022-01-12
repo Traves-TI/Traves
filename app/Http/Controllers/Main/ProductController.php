@@ -179,44 +179,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $COVER = $IMAGE = null;
-
-        $COVER = $request->input("hasCover");
-        $IMAGE = $request->input("hasImage");
+        
+        $COVER = $request->input("hasCover")?:null;
+        $IMAGE = $request->input("hasImage")?:null;
 
         $newProduct = $request->except(["_method", "_token", "hasCover", "hasImage"]);
         
-        // se tiver nulo, verificar se o produto-> é nulo, se não for (apagar do storage e atribuir novo valor no produto-> como nulo)
-
         $company_id = "";
         if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
-
         $errors = [];
         // If have any file
-      
-            if(count($request->files)){
-                $pathImage = "";
-                foreach ($request->files as $key => $value) {
+        if(count($request->files)){
+            $pathImage = "/companies/$company_id/products/$product->id";
+
+            foreach ($request->files as $key => $value) {
                 
                 if(!is_null($key)){
-                    $pathImage = Product::storeImg($request->file($key), $company_id);
+                     $pathImage = Product::storeImg($request->file($key), $pathImage);
                     if(!is_array($pathImage)){
                         $newProduct[$key] = $pathImage;
-                        }else{
-                            array_push($errors, $pathImage);
-                        }
+                    }else{
+                        array_push($errors, $pathImage);
                     }
                 }
-             }else{
-                 if(is_null($COVER) and !(is_null($product->cover))){
-                    Storage::disk('admin')->delete($product->cover); 
-                    HelperTrait::deleteImageStorage($product->cover);
-                 }
-             }
-
-    
-          //   dd($newProduct, $product);
-
+            }   
+        }else{ 
+            if(is_null($COVER) and !(is_null($product->cover))){
+                if(HelperTrait::deleteImageStorage($product->cover)){
+                    $newProduct["cover"] = $COVER; // NULLO 
+                }
+            }
+            if(is_null($IMAGE) and !(is_null($product->image))){
+                if(HelperTrait::deleteImageStorage($product->image)){
+                    $newProduct["image"] = $IMAGE; // NULLO 
+                }
+                }
+            }
 
         if(empty($errors)){
             if(!empty($newProduct)){
@@ -224,9 +222,7 @@ class ProductController extends Controller
                     $request->session()->flash('success', 'The product was edited with success');
                     return redirect()->back()->withInput($newProduct);
                 }
-
             } else {
-            
                 $errors['product.edit'] = __('It wasn\'t possible to edit a product');
             }
       }
@@ -242,6 +238,13 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $nameProduct = $product->name;
+       if($product->delete()){
+            session(['success' => __("The product: $nameProduct was deleted")]);
+            return redirect()->back();
+       }
+
+       return redirect()->back()->withErrors(["product.delete", __("There was an error deleting the product")]);
+      
     }
 }
