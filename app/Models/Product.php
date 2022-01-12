@@ -26,7 +26,6 @@ class Product extends Model
        
         $MIMES = ["gif","png", "jpeg", "jpg"]; 
 
-        
         // Check mime type
         if($image and array_search($image->extension(), $MIMES)){   
            

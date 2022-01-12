@@ -180,14 +180,14 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $newProduct = $request->except(["_method", "_token"]);
-     
+       
         $company_id = "";
         if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
         
         $errors = [];
         // If have any file
         if(count($request->files)){
-                
+
             $pathImage = "";
             foreach ($request->files as $key => $value) {
               if(!is_null($key)){
