@@ -25,8 +25,9 @@
             @csrf()
             @include('admin.parts.alerts')
 
-            @if(session("productExcluded"))
-                <a href="{{route('admin.products.edit', session("productExcluded")->id)}}">Do you want to edit product? </a>
+            @if(session("idProductExcluded"))
+                
+                <a href="{{route('admin.product.recover', ["id" => session("idProductExcluded")])}}">Do you want recover and edit this product? </a>
              @endif
 
                 <div class='row form-group'>

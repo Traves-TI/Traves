@@ -92,8 +92,8 @@ class ProductController extends Controller
             if($SLUG){
                 if(is_object($SLUG)){
                     $errors["product.excluded"] = __("Already exist a product with the same name");
-                    $productExcluded = $SLUG;
-                    return redirect()->back()->withErrors($errors)->withInput($data)->with(compact("productExcluded"));
+                    $idProductExcluded = $SLUG->id;
+                    return redirect()->back()->withErrors($errors)->withInput($data)->with(compact("idProductExcluded"));
                 }
                 
             }
@@ -153,7 +153,6 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-
         $taxes = Tax::all()?:null;
         $product_type = ProductType::all()?:null;
         $status = Status::all()?:null;
@@ -175,7 +174,6 @@ class ProductController extends Controller
             "status" => $status,
             "nameImgCover" => $nameImgCover,
             "nameImgMain" => $nameImgMain,
-
         ]);
     }
 
@@ -255,5 +253,19 @@ class ProductController extends Controller
 
        return redirect()->back()->withErrors(["product.delete", __("There was an error deleting the product")]);
       
+    }
+
+    
+    public function recoverProduct($id){
+        if(is_null($id)) return view("admin.products.index");
+
+        $product = Product::withTrashed()->find($id);
+        if(!(is_null($product))){
+            $product->deleted_at = null;
+            if($product->save()){
+                return redirect()->route('admin.products.edit', $product->id);
+            }
+            
+        }
     }
 }

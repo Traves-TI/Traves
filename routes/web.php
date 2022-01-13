@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth']], function(){
         // Rotas dos modelos loucões
         Route::resource('/clients', Main\ClientController::class);
         Route::resource('/products', Main\ProductController::class);
+        Route::get("/products/recover/{id}", 'Main\ProductController@recoverProduct')->name('product.recover');
       
     });
 
