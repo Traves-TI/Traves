@@ -8,12 +8,9 @@ use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Status;
 use App\Models\Tax;
-use Hamcrest\Arrays\IsArray;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+
 
 class ProductController extends Controller
 {
@@ -28,7 +25,7 @@ class ProductController extends Controller
         $data = $request->all();
         $quant = 20;
         $products = Product::orderBy('name','ASC');
-
+        
  
         if(!empty($data)){
             if(isset($data["entries"]) and !empty($data["entries"])){

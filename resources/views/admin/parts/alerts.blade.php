@@ -14,4 +14,5 @@
     <div class="alert alert-success">
         <label>{{Session::get('success')}}</label>
     </div>
+    {{Session::forget("success")}}
 @endif
