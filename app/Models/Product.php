@@ -19,8 +19,21 @@ class Product extends Model
     static function getSlug($slug){
         $slug = Str::slug($slug, "-");
         $self = new self();
+        $product = null;
+        /* Get all products, excludeds include */ 
+        $product = (!is_null($self))?($self->withTrashed()->where("slug", $slug)->first()):$product;
         
-        return (is_null($self->all()->where("slug", $slug)->first()))?$slug:false;
+        /* If not null, check if is trashed */ 
+        if(!(is_null($product))){
+            /* If not trashed, return error the same name  */
+          if(!($product->trashed())) return false;      
+          /* If trashed return the product excluded */
+          else return $product;
+        /* If product is null, return the slug */ 
+        }else{
+            return $slug;
+        }
+        
     } 
 
     static function storeImg($image, $pathStorage){

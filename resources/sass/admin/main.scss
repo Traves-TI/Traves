@@ -36,4 +36,12 @@
 .maxHeight150{
     max-height: 150px;
 } 
+/* Modal */
+.error-modal .modal-header{
+    background-color: red;
+    color: #fff;
+}
 
+.error-modal .modal-header .close{
+    color: #fff;
+}

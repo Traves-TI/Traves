@@ -12,7 +12,7 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    
+    @extends('admin.helpers.modal')
     <!-- Bootstrap core JavaScript-->
   <?php  /* 
   

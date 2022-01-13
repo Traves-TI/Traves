@@ -72,7 +72,7 @@
                                     <td>{{ $product->tax }}</td>
                                     <td class="text-center">
                                             <a class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.products.edit', [$product]) }} " ><i class="fa fa-edit"></i></a> 
-                                            <form data-confirm='{{__("Are you sure that delete this product?") . $product->name}}' class='display-inline-block' method="POST" action="{{ route('admin.products.destroy', $product->id) }}"> @csrf @method('DELETE') <button class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button></form>
+                                            <form data-title='{{__("Delete Product")}}' data-callback='oi' data-btn-cancel='{{__("Cancel")}}' data-btn-save='{{__("Continue")}}' data-class='error-modal' data-confirm='{{__("Are you sure that delete this product? ") . $product->name}}'  class='display-inline-block' method="POST" action="{{ route('admin.products.destroy', $product->id) }}"> @csrf @method('DELETE') <button class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button></form>
                                     </td>
                                 </tr>
                             @endforeach

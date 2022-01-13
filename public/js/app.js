@@ -37471,13 +37471,47 @@ $(function () {
 /***/ (function(module, exports) {
 
 $(function () {
-  $("[data-confirm]").on("click", function (e) {
-    var message = $(this).data("confirm");
+  function oi() {
+    return alert("oi");
+  }
 
-    if (!confirm(message)) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
+  $("[data-confirm]").on("click", function (e) {
+    var modal = $('#modal');
+    var message = $(this).data("confirm");
+    var title = $(this).data("title");
+    var btnSave = $(this).data("btn-save");
+    var btnCancel = $(this).data("btn-cancel");
+    var classModal = $(this).data("class");
+    var callback = $(this).data("callback");
+
+    if (modal.length) {
+      /* Fill fields of modal */
+      if (classModal != null) modal.addClass(classModal);
+      if (title != null) modal.find(".modal-title").html(title);
+      if (message != null) modal.find(".modal-body").html(message); // Show cancel button 
+
+      if (btnCancel != null) {
+        $("#cancel").removeAttr("hidden");
+        modal.find("#cancel").html(btnCancel);
+      } // Check if have any functions for to call
+
+
+      if (btnSave != null) {
+        modal.find("#save").html(btnSave);
+
+        if (callback != null) {
+          var CallbackFunction = new Function();
+          console.log(CallbackFunction, callback);
+
+          if (typeof CallbackFunction === 'function') {
+            return CallbackFunction;
+          }
+        }
+      }
     }
+
+    e.preventDefault();
+    modal.modal("show");
   });
 });
 

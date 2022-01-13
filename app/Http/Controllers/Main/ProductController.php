@@ -87,26 +87,37 @@ class ProductController extends Controller
         
         
         if(!isset($data['slug']) AND isset($data['name'])){
-            $data['slug'] = Product::getSlug($data["name"]);
-        }
-        
-        // If have any file
-        if(count($request->files)){
-            $pathImage = "";
-            foreach ($request->files as $key => $value) {
-                $pathImage = Product::storeImg($request->file($key), $company_id);
-          
-                if(!is_array($pathImage)){
-                    $data[$key] = "images/" . $pathImage;
-                }else{
-                    array_push($errors, $pathImage);
-                }
-            }
             
+            $SLUG = Product::getSlug($data["name"]);
+            if($SLUG){
+                if(is_object($SLUG)){
+                    $errors["product.excluded"] = __("Already exist a product with the same name");
+                    $productExcluded = $SLUG;
+                    return redirect()->back()->withErrors($errors)->withInput($data)->with(compact("productExcluded"));
+                }
+                
+            }
+            $data['slug'] = $SLUG;
+            /* Check if the product is deleted */
         }
+       
         if(empty($errors)){
-          
+            
             if($data['slug']){
+                // If have any file
+                if(count($request->files)){
+                    $pathImage = "";
+                    foreach ($request->files as $key => $value) {
+                        $pathImage = Product::storeImg($request->file($key), $company_id);
+                        
+                        if(!is_array($pathImage)){
+                            $data[$key] = "images/" . $pathImage;
+                        }else{
+                            array_push($errors, $pathImage);
+                        }
+                    }
+                    
+                }
                 $product = Product::create($data);
                 if($product){
                     $request->session()->flash('success', 'The product was created with success');
@@ -116,6 +127,7 @@ class ProductController extends Controller
                     $errors['product.create'] = __('It wasn\'t possible to create a product');
                 }
             }else{
+                
                 $errors['product.slugAlreadyExists'] = __('It wasn\'t possible to create a product, there a product with the same name');
             }
         }

@@ -1,3 +1,4 @@
+
 <div class="card mb-100">
     <div class="card-body">
 
@@ -23,6 +24,10 @@
 
             @csrf()
             @include('admin.parts.alerts')
+
+            @if(session("productExcluded"))
+                <a href="{{route('admin.products.edit', session("productExcluded")->id)}}">Do you want to edit product? </a>
+             @endif
 
                 <div class='row form-group'>
 
@@ -94,6 +99,7 @@
                             @endif
                         </select>
                     </div>
+                  
                     <div class='col-md-4 col-sm-12'>
                         <select name='product_type_id'
                         class='form-control'>
