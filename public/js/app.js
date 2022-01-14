@@ -37377,9 +37377,9 @@ __webpack_require__(/*! ./sb-admin-2 */ "./resources/js/sb-admin-2.js");
 
 __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
 
-__webpack_require__(/*! ./modal-confirm */ "./resources/js/modal-confirm.js");
-
 __webpack_require__(/*! ./products */ "./resources/js/products.js");
+
+__webpack_require__(/*! ./modal-confirm */ "./resources/js/modal-confirm.js");
 
 __webpack_require__(/*! ./helpers */ "./resources/js/helpers.js");
 
@@ -37471,21 +37471,21 @@ $(function () {
 /***/ (function(module, exports) {
 
 $(function () {
-  function oi() {
-    return alert("oi");
-  }
-
-  $("[data-confirm]").on("click", function (e) {
+  var fnCrazy = {};
+  $("[data-confirm]").on("click", function (evt) {
     var modal = $('#modal');
-    var message = $(this).data("confirm");
-    var title = $(this).data("title");
-    var btnSave = $(this).data("btn-save");
-    var btnCancel = $(this).data("btn-cancel");
-    var classModal = $(this).data("class");
-    var callback = $(this).data("callback");
+    var btnClicked = $(this);
+    var message = btnClicked.data("confirm");
+    var title = btnClicked.data("title");
+    var btnSave = btnClicked.data("btn-save");
+    var btnCancel = btnClicked.data("btn-cancel");
+    var classModal = btnClicked.data("class");
+    var callback = btnClicked.data("callback");
 
     if (modal.length) {
+      evt.preventDefault();
       /* Fill fields of modal */
+
       if (classModal != null) modal.addClass(classModal);
       if (title != null) modal.find(".modal-title").html(title);
       if (message != null) modal.find(".modal-body").html(message); // Show cancel button 
@@ -37493,24 +37493,36 @@ $(function () {
       if (btnCancel != null) {
         $("#cancel").removeAttr("hidden");
         modal.find("#cancel").html(btnCancel);
-      } // Check if have any functions for to call
+      } // Check if have any functions for to call, function came of view and inserted at header before modal.js
 
 
       if (btnSave != null) {
-        modal.find("#save").html(btnSave);
+        var btnSaveModal = modal.find("#save");
+        btnSaveModal.html(btnSave);
+        btnSaveModal.one("click", function () {
+          if (callback !== null && callback !== '') {
+            var _fnCrazy = {};
+            _fnCrazy = new Function(callback + "()");
 
-        if (callback != null) {
-          var CallbackFunction = new Function();
-          console.log(CallbackFunction, callback);
+            if (typeof _fnCrazy === 'function') {
+              _fnCrazy();
+            }
+          } else {
+            // If have not a function, try submit the form or redirect for any page
+            if (btnClicked.attr("action")) {
+              var _evt = jQuery.Event("submit");
 
-          if (typeof CallbackFunction === 'function') {
-            return CallbackFunction;
+              btnClicked.trigger(_evt);
+            } else {
+              if (btnClicked.attr("ref") != undefined) {
+                window.location.href = btnClicked.attr("ref");
+              }
+            }
           }
-        }
+        });
       }
     }
 
-    e.preventDefault();
     modal.modal("show");
   });
 });

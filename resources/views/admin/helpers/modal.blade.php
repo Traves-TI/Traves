@@ -12,7 +12,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" id='cancel' class="btn btn-secondary" hidden data-dismiss="modal">{{__("Cancel")}}</button>
-          <button type="button" id='save' class="btn btn-success" data-dismisswithcallback="save">{{__("Save")}}</button>
+          <button type="button" id='save' class="btn btn-success" >{{__("Save")}}</button>
         </div>
       </div>
     </div>

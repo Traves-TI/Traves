@@ -15,7 +15,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="{{mix("css/app.css")}}" rel="stylesheet">
     <link href="{{mix("css/admin/main.css")}}" rel="stylesheet">
-    
+    @stack('actionSuccessModal')
     <script src="{{mix("js/app.js")}}"></script>
 </head>
 <body id="page-top" @isset($body_class) class="{{$body_class}}" @endisset>

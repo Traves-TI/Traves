@@ -1,55 +1,70 @@
 $(function(){
-   
-    function oi(){
-        return alert("oi");
 
-    }
+    var fnCrazy = {};
+  
 
-
-    $("[data-confirm]").on("click", function(e){
-        
+    $("[data-confirm]").on("click", function(evt){
+      
         let modal = $('#modal'); 
-        let message = $(this).data("confirm");
-        let title = $(this).data("title");
-        let btnSave = $(this).data("btn-save");
-        let btnCancel = $(this).data("btn-cancel");
-        let classModal = $(this).data("class");
-        let callback = $(this).data("callback");
+        let btnClicked = $(this);
+        let message = btnClicked.data("confirm");
+        let title = btnClicked.data("title");
+        let btnSave = btnClicked.data("btn-save");
+        let btnCancel = btnClicked.data("btn-cancel");
+        let classModal = btnClicked.data("class");
+        let callback = btnClicked.data("callback");
         
         if(modal.length){
+            
+            evt.preventDefault();    
+            
             /* Fill fields of modal */ 
             if(classModal != null) modal.addClass(classModal);
             if(title != null) modal.find(".modal-title").html(title);
             if(message != null) modal.find(".modal-body").html(message);
-           
+            
             // Show cancel button 
             if(btnCancel != null) {
                 $("#cancel").removeAttr("hidden");
                 modal.find("#cancel").html(btnCancel);
             }
-
-            // Check if have any functions for to call
+            
+            
+            // Check if have any functions for to call, function came of view and inserted at header before modal.js
             if(btnSave != null){
-                modal.find("#save").html(btnSave);
-                if(callback != null){
+                let btnSaveModal = modal.find("#save");
+                btnSaveModal.html(btnSave);
+                
+                btnSaveModal.one("click", function(){
                     
-                    var CallbackFunction = new Function();
-                    console.log(CallbackFunction, callback);
+                    if(callback !== null && callback !== ''){
+                        let fnCrazy = {};
+                        fnCrazy = new Function(callback+"()");
+                        if(typeof fnCrazy === 'function'){
+                            fnCrazy();
+                        }
+                    }else{// If have not a function, try submit the form or redirect for any page
+                        if(btnClicked.attr("action")){
+                            let evt = jQuery.Event( "submit" );
+                            btnClicked.trigger(evt);
+                        }else{
+                            if(btnClicked.attr("ref") != undefined){
+                                window.location.href = btnClicked.attr("ref");
+                            }
+                            
 
-                    if(typeof CallbackFunction === 'function'){
-                        return CallbackFunction;
+                        }
+                        
+                        
                     }
-                }
+                });
             }
-            
-            
         }
-
-        e.preventDefault();
+            
         modal.modal("show");
         
-        
-        
+    
     });
+
 
 });

@@ -1,7 +1,7 @@
 
 <div class="card mb-100">
     <div class="card-body">
-
+       
         <h3>
             @isset($product)
                 {{ __('Edit product') }}
@@ -26,8 +26,7 @@
             @include('admin.parts.alerts')
 
             @if(session("idProductExcluded"))
-                
-                <a href="{{route('admin.product.recover', ["id" => session("idProductExcluded")])}}">Do you want recover and edit this product? </a>
+                <a href="{{route('admin.product.recover', ["id" => session("idProductExcluded")])}}">{{__("Do you want recover this product? ")}}</a>
              @endif
 
                 <div class='row form-group'>
@@ -146,7 +145,6 @@
                     </div>
                 </div>
             </div>
-            <span data-confirm=""></span>
 
             <div class='row text-right  ' >
                 <div class='col-md-12'>
@@ -160,8 +158,6 @@
                     </button>
                 </div>
             </div>
-
-
         </form>
     </div>
 </div>
