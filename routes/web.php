@@ -29,7 +29,6 @@ Route::get('/logout', function(){
     }
     Auth::logout();
     return redirect()->route('login');
- 
     
 });
 
@@ -40,6 +39,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::name("admin.")->prefix('admin')->group(function(){
 
         Route::resource('/company', Main\CompanyController::class);
+        Route::resource('/tax', Main\TaxController::class);
        
 
         // Rotas dos modelos loucões

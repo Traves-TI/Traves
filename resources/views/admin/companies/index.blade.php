@@ -13,7 +13,7 @@
         <div class="card">
             <div class="card-body text-right">
                 <a class='btn btn-info btn-lg' href='{{route('admin.company.create')}}'>{{__("Dashboard")}}</a>
-                
+                <a class='btn btn-info btn-lg' href='{{route('admin.tax.create')}}'>{{__("Create tax")}}</a>
             </div>
             </div>
     @endif        
