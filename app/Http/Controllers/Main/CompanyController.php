@@ -97,7 +97,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        return redirect()->route("admin.clients.index")->withCookies([cookie('company',$company->id)]);
+        return redirect()->route("admin.client.index")->withCookies([cookie('company',$company->id)]);
     }
 
     /**

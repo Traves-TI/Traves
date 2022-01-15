@@ -37,7 +37,7 @@ $(function(){
                 
                 btnSaveModal.one("click", function(){
                     
-                    if(callback !== null && callback !== ''){
+                    if(callback !== undefined && callback !== ''){
                         let fnCrazy = {};
                         fnCrazy = new Function(callback+"()");
                         if(typeof fnCrazy === 'function'){

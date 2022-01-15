@@ -37500,7 +37500,7 @@ $(function () {
         var btnSaveModal = modal.find("#save");
         btnSaveModal.html(btnSave);
         btnSaveModal.one("click", function () {
-          if (callback !== null && callback !== '') {
+          if (callback !== undefined && callback !== '') {
             var _fnCrazy = {};
             _fnCrazy = new Function(callback + "()");
 

@@ -12,11 +12,11 @@
         @if(Auth::user()->id == 1)
         <div class="card">
             <div class="card-body text-right">
-                <a class='btn btn-info btn-lg' href='{{route('admin.company.create')}}'>{{__("Dashboard")}}</a>
-                <a class='btn btn-info btn-lg' href='{{route('admin.tax.create')}}'>{{__("Create tax")}}</a>
+                    <a class='btn btn-info btn-lg' href='{{route('admin.tax.index')}}'>{{__("Create tax")}}</a>
+                    <a class='btn btn-info btn-lg' href='{{route('admin.company.create')}}'>{{__("Create company")}}</a>
+                </div>
             </div>
-            </div>
-    @endif        
+      @endif        
     @if(isset($companies) AND $companies->count() > 0)
         
             <div class="card">
@@ -66,17 +66,17 @@
         </div>
 
         @else
-        @if(Auth::user()->id != 1)
-            <div class="card">
-                <div class="card-body">
-                    <p>{!! __('Hi :name ! There are no companies to be shown, create your first company <a href=":url">here</a>',[
-                        'name' => Auth::user()->name,
-                        'url' => route('admin.company.create')
-                    ]) !!}</p>
+            @if(Auth::user()->id != 1)
+                <div class="card">
+                    <div class="card-body">
+                        <p>{!! __('Hi :name ! There are no companies to be shown, create your first company <a href=":url">here</a>',[
+                            'name' => Auth::user()->name,
+                            'url' => route('admin.company.create')
+                        ]) !!}</p>
 
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
         @endif
    
 

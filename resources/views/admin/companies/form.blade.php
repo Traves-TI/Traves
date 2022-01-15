@@ -31,7 +31,7 @@
                             value='@isset($company){{ $company->name }}@else{{ old('name') }}@endisset'
                             placeholder="{{ __('Company name') }}" 
                             class='form-control' 
-                            _required
+                            required
                             />
                     </div>
                 </div>
@@ -115,7 +115,7 @@
             <div class='row form-group'>
                 <div class='col-md-12'>
                     <button class='btn btn-success'>
-                        @isset($user)
+                        @isset($company)
                         {{ __('Save') }}
                     @else
                         {{ __ ('Submit') }}
