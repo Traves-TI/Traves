@@ -12,8 +12,9 @@
         @if(Auth::user()->id == 1)
         <div class="card">
             <div class="card-body text-right">
-                    <a class='btn btn-info btn-lg' href='{{route('admin.companies.create')}}'>{{__("Create company")}}</a>
-                </div>
+                <a class='btn btn-info btn-lg' href='{{route('admin.companies.create')}}'>{{__("Dashboard")}}</a>
+                <a class='btn btn-info btn-lg' href='{{route('admin.companies.create')}}'>{{__("Create company")}}</a>
+            </div>
             </div>
     @endif        
     @if(isset($companies) AND $companies->count() > 0)

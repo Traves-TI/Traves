@@ -22,11 +22,12 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+
         $data = $request->all();
         $quant = 20;
         $products = Product::orderBy('name','ASC');
         
- 
+        
         if(!empty($data)){
             if(isset($data["entries"]) and !empty($data["entries"])){
                 $quant = $data["entries"];
@@ -85,9 +86,7 @@ class ProductController extends Controller
         $company_id = "";
         if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
         
-        
         if(!isset($data['slug']) AND isset($data['name'])){
-            
             $SLUG = Product::getSlug($data["name"]);
             if($SLUG){
                 if(is_object($SLUG)){
@@ -96,6 +95,8 @@ class ProductController extends Controller
                     return redirect()->back()->withErrors($errors)->withInput($data)->with(compact("idProductExcluded"));
                 }
                 
+            }else{
+                $errors['product.slugAlreadyExists'] = __('It wasn\'t possible to create a product, there a product with the same name');
             }
             $data['slug'] = $SLUG;
             /* Check if the product is deleted */
@@ -126,9 +127,6 @@ class ProductController extends Controller
                 
                     $errors['product.create'] = __('It wasn\'t possible to create a product');
                 }
-            }else{
-                
-                $errors['product.slugAlreadyExists'] = __('It wasn\'t possible to create a product, there a product with the same name');
             }
         }
         return redirect()->back()->withErrors($errors)->withInput($data);
@@ -158,7 +156,7 @@ class ProductController extends Controller
         $status = Status::all()?:null;
         
         $product = Product::find($product)->first();
-        
+       // dd($product->type()->first());
         $nameImgCover = $nameImgMain = "";
     
         $nameImgCover = (!is_null($product->cover)) ? explode('/', $product->cover) : null;
@@ -186,44 +184,62 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        
+        $errors = [];
         $COVER = $request->input("hasCover")?:null;
         $IMAGE = $request->input("hasImage")?:null;
 
         $newProduct = $request->except(["_method", "_token", "hasCover", "hasImage"]);
-        
-        $company_id = "";
-        if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
-        $errors = [];
-        // If have any file
-        if(count($request->files)){
-            $pathImage = "/companies/$company_id/products/$product->id";
-
-            foreach ($request->files as $key => $value) {
+        // Altera o slug
+        if(!isset($newProduct['slug']) AND isset($newProduct['name'])){
+            $SLUG = Product::getSlug($request["name"]);
+            if($SLUG){
+                if(is_object($SLUG)){
+                    $errors["product.excluded"] = __("Already exist a product with the same name");
+                    $idProductExcluded = $SLUG->id;
+                    return redirect()->back()->withErrors($errors)->withInput($newProduct)->with(compact("idProductExcluded"));
+                }
                 
-                if(!is_null($key)){
-                     $pathImage = Product::storeImg($request->file($key), $pathImage);
-                    if(!is_array($pathImage)){
-                        $newProduct[$key] = $pathImage;
-                    }else{
-                        array_push($errors, $pathImage);
+            }else{
+                $errors['product.slugAlreadyExists'] = __('It wasn\'t possible to create a product, there a product with the same name');
+            }
+
+            $newProduct['slug'] = $SLUG;
+        }
+     
+        if(empty($errors)){
+            if($newProduct["slug"]){
+                $company_id = "";
+                if(!is_null(Cookie::get('company'))) $company_id = Cookie::get('company');
+                
+                // If have any file
+                if(count($request->files)){
+                    $pathImage = "/companies/$company_id/products/$product->id";
+        
+                    foreach ($request->files as $key => $value) {
+                        
+                        if(!is_null($key)){
+                             $pathImage = Product::storeImg($request->file($key), $pathImage);
+                            if(!is_array($pathImage)){
+                                $newProduct[$key] = $pathImage;
+                            }else{
+                                array_push($errors, $pathImage);
+                            }
+                        }
+                    }   
+                }else{ 
+                    if(is_null($COVER) and !(is_null($product->cover))){
+                        if(HelperTrait::deleteImageStorage($product->cover)){
+                            $newProduct["cover"] = $COVER; // NULLO 
+                        }
+                    }
+                    if(is_null($IMAGE) and !(is_null($product->image))){
+                        if(HelperTrait::deleteImageStorage($product->image)){
+                            $newProduct["image"] = $IMAGE; // NULLO 
+                        }
                     }
                 }
-            }   
-        }else{ 
-            if(is_null($COVER) and !(is_null($product->cover))){
-                if(HelperTrait::deleteImageStorage($product->cover)){
-                    $newProduct["cover"] = $COVER; // NULLO 
-                }
-            }
-            if(is_null($IMAGE) and !(is_null($product->image))){
-                if(HelperTrait::deleteImageStorage($product->image)){
-                    $newProduct["image"] = $IMAGE; // NULLO 
-                }
-                }
-            }
-
-        if(empty($errors)){
+        
+           
             if(!empty($newProduct)){
                 if($product and $product->update($newProduct)){
                     $request->session()->flash('success', 'The product was edited with success');
@@ -232,6 +248,7 @@ class ProductController extends Controller
             } else {
                 $errors['product.edit'] = __('It wasn\'t possible to edit a product');
             }
+        }
       }
         return redirect()->back()->withErrors($errors)->withInput($newProduct);
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,8 +22,15 @@ Route::get('/jesus', 'HomeController@index')->name('login');
 Auth::routes();
 
 Route::get('/logout', function(){
+    
+    /* Clear cookie before loggout */ 
+    if(!is_null(Cookie::get('company'))){
+            Cookie::queue(Cookie::forget('company'));
+    }
     Auth::logout();
     return redirect()->route('login');
+
+    
 });
 
 Route::group(['middleware' => ['auth']], function(){

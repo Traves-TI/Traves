@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use PDO;
 
 class Product extends Model
 {
@@ -13,6 +16,11 @@ class Product extends Model
     protected $connection = 'traves_db';
     protected $fillable = ['name', 'description', 'price', 'quantity', 'cover', 'image', 'reference', 'slug', 'tax_id', 'status_id', 'product_type_id'];
 
+/* TODO NAO DA PARA  FAZER AS RELAÇÕES POIS O PRODUCT TYPE ESTA NOUTRA DB (TRAVES_DB) 
+    public function type(){
+        
+        return $this->belongsTo(ProductType::class, 'product_type_id', 'id');
+    }
     /**
      * Function return slug to creation
      */

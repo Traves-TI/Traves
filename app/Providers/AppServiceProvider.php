@@ -10,6 +10,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
@@ -34,10 +35,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-     
+      
        // Check is Cookie exist
         if(!is_null(Cookie::get('company'))){
-            
             // Cookie for to recover company id and after connect the databse of current company 
             try{
                 $arrCompanyID = explode('|', Crypt::decrypt(Cookie::get('company'), false));
@@ -71,4 +71,5 @@ class AppServiceProvider extends ServiceProvider
     }
         
     }
+
 }

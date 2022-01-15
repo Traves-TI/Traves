@@ -24,7 +24,7 @@ class ClientController extends Controller
         $data = $request->all();
         $quant = 20;
         $clients = Client::orderBy('name','ASC');
-
+        
         if(!empty($data)){
             if(isset($data["entries"]) and !empty($data["entries"])){
                 $quant = $data["entries"];
