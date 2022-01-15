@@ -13,7 +13,7 @@
 
         <form 
             method="POST" 
-            action="@isset($client) {{ route('admin.clients.update', ['client' => $client]) }}@else {{  route('admin.clients.store') }} @endisset" 
+            action="@isset($client) {{ route('admin.client.update', ['client' => $client]) }}@else {{  route('admin.client.store') }} @endisset" 
             class="client-form">
             
             @isset($client)

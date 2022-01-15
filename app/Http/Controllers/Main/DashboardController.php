@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $CompanyDB = new CompanyDB();
         
         //if(Auth::user()->level != 0){
-            return redirect()->route('admin.companies.index');
+            return redirect()->route('admin.company.index');
         //}
 
         return view("admin.app");

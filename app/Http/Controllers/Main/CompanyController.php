@@ -35,14 +35,14 @@ class CompanyController extends Controller
                 if(!empty($_GET["search"])){
                     $companies = $companies->where("name", 'like', '%' . $data["search"] . '%');
                 }else{
-                    return redirect()->route('admin.companies.index');
+                    return redirect()->route('admin.company.index');
                 }
 
             }
         }
 
         if(isset($_GET["entries"]) and isset($_GET["page"]) and $_GET["entries"] > $companies->count()){
-            return redirect()->route('admin.companies.index', $request->except("page"));
+            return redirect()->route('admin.company.index', $request->except("page"));
         }
 
     
@@ -80,7 +80,7 @@ class CompanyController extends Controller
         if($company){
             $nameCompany = $company->name;
             $request->session()->flash('success', "The company: $nameCompany created with success");
-            return redirect()->route('admin.companies.index');
+            return redirect()->route('admin.company.index');
         } else {
            
             $errors['company.create'] = __('It wasn\'t possible to create a company');
@@ -130,7 +130,7 @@ class CompanyController extends Controller
                 $nameCompany = $company->name;
                 $request->session()->flash('success', "The company: $nameCompany was updated with success");
                 // TODO - Se o utilizador for criar mais empresas depois verificar qual o tipo de utilizador esta logado no index
-               return redirect()->route('admin.companies.index');
+               return redirect()->route('admin.company.index');
             }
             $erros['company.update'] = __("There was an error updating company details");
         }else{

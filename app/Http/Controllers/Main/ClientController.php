@@ -35,14 +35,14 @@ class ClientController extends Controller
                 if(!empty($_GET["search"])){
                     $clients = $clients->where("name", 'like', '%' . $data["search"] . '%');
                 }else{
-                    return redirect()->route('admin.clients.index');
+                    return redirect()->route('admin.client.index');
                 }
 
             }
         }
 
         if(isset($_GET["entries"]) and isset($_GET["page"]) and $_GET["entries"] > $clients->count()){
-            return redirect()->route('admin.clients.index', $request->except("page"));
+            return redirect()->route('admin.client.index', $request->except("page"));
         }
 
         $clients = $clients->paginate($quant);
@@ -79,7 +79,7 @@ class ClientController extends Controller
         $errors = [];
         if($client){
             $request->session()->flash('success', 'The client was created with success');
-            return redirect()->route('admin.clients.index');
+            return redirect()->route('admin.client.index');
         } else {
            
             $errors['client.create'] = __('It wasn\'t possible to create a client');
@@ -127,7 +127,7 @@ class ClientController extends Controller
             $res = $client->update($data);
             if($res){
                 $request->session()->flash('success', 'The client was updated with success');
-                return redirect()->route('admin.clients.edit', [$client]);
+                return redirect()->route('admin.client.edit', [$client]);
             }
             $erros['client.update'] = __("There was an error updating client details");
         }else{
@@ -147,9 +147,9 @@ class ClientController extends Controller
     {
         if($client->delete()){
             session()->flash('success', 'The client was deleted with success');
-            return redirect()->route('admin.clients.index');
+            return redirect()->route('admin.client.index');
         }
-        return redirect()->route('admin.clients.index')->withErrors(["client.delete" => "It wasn't possible to delete the cliente"]);
+        return redirect()->route('admin.client.index')->withErrors(["client.delete" => "It wasn't possible to delete the cliente"]);
 
     }
 }

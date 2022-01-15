@@ -38,7 +38,7 @@ class ProductController extends Controller
                 if(!empty($_GET["search"])){
                     $products = $products->where("name", 'like', '%' . $data["search"] . '%');
                 }else{
-                    return redirect()->route('admin.products.index');
+                    return redirect()->route('admin.product.index');
                 }
 
             }
@@ -122,7 +122,7 @@ class ProductController extends Controller
                 $product = Product::create($data);
                 if($product){
                     $request->session()->flash('success', 'The product was created with success');
-                    return redirect()->route('admin.products.index');
+                    return redirect()->route('admin.product.index');
                 } else {
                 
                     $errors['product.create'] = __('It wasn\'t possible to create a product');
@@ -280,7 +280,7 @@ class ProductController extends Controller
         if(!(is_null($product))){
             $product->deleted_at = null;
             if($product->save()){
-                return redirect()->route('admin.products.edit', $product->id);
+                return redirect()->route('admin.product.edit', $product->id);
             }
             
         }

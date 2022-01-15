@@ -12,8 +12,8 @@
         @if(Auth::user()->id == 1)
         <div class="card">
             <div class="card-body text-right">
-                <a class='btn btn-info btn-lg' href='{{route('admin.companies.create')}}'>{{__("Dashboard")}}</a>
-                <a class='btn btn-info btn-lg' href='{{route('admin.companies.create')}}'>{{__("Create company")}}</a>
+                <a class='btn btn-info btn-lg' href='{{route('admin.company.create')}}'>{{__("Dashboard")}}</a>
+                
             </div>
             </div>
     @endif        
@@ -44,9 +44,9 @@
                                         <td>{{ $company->email }}</td>
                                         <td>{{ $company->phone }}</td>
                                         <td class="text-center">
-                                                <a title='{{ __('Select company') }}' class='btn btn-sm btn-warning display-inline-block' href=" {{ route('admin.companies.show', [$company->id]) }} " ><i class="fa fa-check"></i></a> 
-                                                <a title='{{ __('Edit company') }}' class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.companies.edit', [$company->id]) }} " ><i class="fa fa-edit"></i></a> 
-                                                <form data-confirm='{{ __("Are you sure that delete :name?", ['name' => $company->name]) }}' class='display-inline-block' method="POST" action="{{ route('admin.companies.destroy', $company->id) }}"> @csrf @method('DELETE') 
+                                                <a title='{{ __('Select company') }}' class='btn btn-sm btn-warning display-inline-block' href=" {{ route('admin.company.show', [$company->id]) }} " ><i class="fa fa-check"></i></a> 
+                                                <a title='{{ __('Edit company') }}' class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.company.edit', [$company->id]) }} " ><i class="fa fa-edit"></i></a> 
+                                                <form data-confirm='{{ __("Are you sure that delete :name?", ['name' => $company->name]) }}' class='display-inline-block' method="POST" action="{{ route('admin.company.destroy', $company->id) }}"> @csrf @method('DELETE') 
                                                     <button title='{{ __('Delete company') }}' class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button>
                                                 </form>
                                         </td>
@@ -71,7 +71,7 @@
                 <div class="card-body">
                     <p>{!! __('Hi :name ! There are no companies to be shown, create your first company <a href=":url">here</a>',[
                         'name' => Auth::user()->name,
-                        'url' => route('admin.companies.create')
+                        'url' => route('admin.company.create')
                     ]) !!}</p>
 
                 </div>

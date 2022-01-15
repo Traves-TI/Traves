@@ -66,8 +66,8 @@
                                     <td>{{ $client->email }}</td>
                                     <td>{{ $client->phone }}</td>
                                     <td class="text-center">
-                                            <a class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.clients.edit', [$client->id]) }} " ><i class="fa fa-edit"></i></a> 
-                                            <form data-title='{{__("Delete Client")}}' data-callback='' data-btn-cancel='{{__("Cancel")}}' data-btn-save='{{__("Continue")}}' data-class='error-modal' data-confirm='{{__("Are you sure that delete this client? ") . $client->name}}' class='display-inline-block' method="POST" action="{{ route('admin.clients.destroy', $client->id) }}"> @csrf @method('DELETE') <button class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button></form>
+                                            <a class='btn btn-sm btn-info display-inline-block' href=" {{ route('admin.client.edit', [$client->id]) }} " ><i class="fa fa-edit"></i></a> 
+                                            <form data-title='{{__("Delete Client")}}' data-callback='' data-btn-cancel='{{__("Cancel")}}' data-btn-save='{{__("Continue")}}' data-class='error-modal' data-confirm='{{__("Are you sure that delete this client? ") . $client->name}}' class='display-inline-block' method="POST" action="{{ route('admin.client.destroy', $client->id) }}"> @csrf @method('DELETE') <button class="btn-sm btn btn-danger"><i class='fa fa-trash'></i></button></form>
                                     </td>
                                 </tr>
                             @endforeach

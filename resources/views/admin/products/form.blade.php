@@ -14,7 +14,7 @@
 
         <form
             method="POST"
-            action="@isset($product) {{ route('admin.products.update', ['product' => $product]) }}@else {{  route('admin.products.store') }} @endisset"
+            action="@isset($product) {{ route('admin.product.update', ['product' => $product]) }}@else {{  route('admin.product.store') }} @endisset"
             class="product-form"
             enctype="multipart/form-data">
 

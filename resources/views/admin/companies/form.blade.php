@@ -13,7 +13,7 @@
 
         <form 
             method="POST" 
-            action="@isset($company) {{ route('admin.companies.update', ['company' => $company]) }}@else {{  route('admin.companies.store') }} @endisset" 
+            action="@isset($company) {{ route('admin.company.update', ['company' => $company]) }}@else {{  route('admin.company.store') }} @endisset" 
             class="company-form">
             
             @isset($company)

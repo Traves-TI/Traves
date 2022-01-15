@@ -29,7 +29,7 @@ Route::get('/logout', function(){
     }
     Auth::logout();
     return redirect()->route('login');
-
+ 
     
 });
 
@@ -39,12 +39,13 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::name("admin.")->prefix('admin')->group(function(){
 
-        Route::resource('/companies', Main\CompanyController::class);
+        Route::resource('/company', Main\CompanyController::class);
+       
 
         // Rotas dos modelos loucões
-        Route::resource('/clients', Main\ClientController::class);
-        Route::resource('/products', Main\ProductController::class);
-        Route::get("/products/recover/{id}", 'Main\ProductController@recoverProduct')->name('product.recover');
+        Route::resource('/client', Main\ClientController::class);
+        Route::resource('/product', Main\ProductController::class);
+        Route::get("/product/recover/{id}", 'Main\ProductController@recoverProduct')->name('product.recover');
       
     });
 

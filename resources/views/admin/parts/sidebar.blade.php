@@ -35,8 +35,8 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('admin.clients.create') }}">{{__("Add")}}</a>
-                <a class="collapse-item" href="{{ route('admin.clients.index') }}">{{__("List clients")}}</a>
+                <a class="collapse-item" href="{{ route('admin.client.create') }}">{{__("Add")}}</a>
+                <a class="collapse-item" href="{{ route('admin.client.index') }}">{{__("List clients")}}</a>
             </div>
         </div>
     </li>
@@ -52,8 +52,8 @@
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 
-                <a class="collapse-item" href="{{ route('admin.products.create') }}">{{__("Add")}}</a>
-                <a class="collapse-item" href="{{ route('admin.products.index') }}">{{__("List Products")}}</a>
+                <a class="collapse-item" href="{{ route('admin.product.create') }}">{{__("Add")}}</a>
+                <a class="collapse-item" href="{{ route('admin.product.index') }}">{{__("List Products")}}</a>
             </div>
         </div>
     </li>
