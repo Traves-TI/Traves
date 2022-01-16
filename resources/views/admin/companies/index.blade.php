@@ -13,6 +13,7 @@
         <div class="card">
             <div class="card-body text-right">
                     <a class='btn btn-info btn-lg' href='{{route('admin.tax.index')}}'>{{__("Create tax")}}</a>
+                    <a class='btn btn-info btn-lg' href='{{route('admin.company-type.index')}}'>{{__("Create Company Type")}}</a>
                     <a class='btn btn-info btn-lg' href='{{route('admin.company.create')}}'>{{__("Create company")}}</a>
                 </div>
             </div>

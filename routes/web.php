@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth']], function(){
 
         Route::resource('/company', Main\CompanyController::class);
         Route::resource('/tax', Main\TaxController::class);
+        Route::resource('/company-type', Main\CompanyTypeController::class);
        
 
         // Rotas dos modelos loucões

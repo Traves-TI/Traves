@@ -42,7 +42,7 @@ class CompanyDB extends Model
         if(!is_null($this->conn) OR $this->conn) return $this->conn;
 
 
-        config(['database.connections.traves_db' => [
+        config(['database.connections.traves_company' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -62,7 +62,7 @@ class CompanyDB extends Model
             ]) : [],
         ]]);
 
-        return Schema::connection('traves_db');
+        return Schema::connection('traves_company');
     }
 
     static function create($company_id){

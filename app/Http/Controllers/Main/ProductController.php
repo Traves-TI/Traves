@@ -156,7 +156,7 @@ class ProductController extends Controller
         $status = Status::all()?:null;
         
         $product = Product::find($product)->first();
-       // dd($product->type()->first());
+        
         $nameImgCover = $nameImgMain = "";
     
         $nameImgCover = (!is_null($product->cover)) ? explode('/', $product->cover) : null;

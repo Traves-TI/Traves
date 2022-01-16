@@ -14,11 +14,15 @@ $(function(){
         $fileType = ($file.type).split("/");
         $fileType = $fileType[$fileType.length - 1];
         $message = "";
-        
+       
         if($fileSize > 2 || $MIMES.find(el => el === $fileType) == undefined){ 
             $message = ($fileSize > 2) ? '{{__("File size exceeds the limit allowed and cannot be saved")}}' + "</br>" : "";
-            $message += ($MIMES.find(el => el === $fileType) == undefined) ? '{{__("File type donts allowed and cannot be saved")}}': "";
-            $("[data-confirm]").data("confirm", $message).trigger("click");
+            $message += ($MIMES.find(el => el === $fileType) == undefined) ? "{{__('File type donts allowed and cannot be saved')}}" : "";
+            
+            $("[data-confirm]").data({
+                "confirm" :  $message,
+                "class" : 'error-modal'
+            }).trigger("click");
             return false;
 
          

@@ -37476,10 +37476,11 @@ $(function () {
     var modal = $('#modal');
     var btnClicked = $(this);
     var message = btnClicked.data("confirm");
-    var title = btnClicked.data("title");
-    var btnSave = btnClicked.data("btn-save");
-    var btnCancel = btnClicked.data("btn-cancel");
-    var classModal = btnClicked.data("class");
+    if (!message) return false;
+    var title = btnClicked.data("title") ? btnClicked.data("title") : 'Success';
+    var btnSave = btnClicked.data("btn-save") ? btnClicked.data("btn-cancel") : 'Save';
+    var btnCancel = btnClicked.data("btn-cancel") ? btnClicked.data("btn-cancel") : 'Cancel';
+    var classModal = btnClicked.data("class") ? btnClicked.data("class") : 'success-modal';
     var callback = btnClicked.data("callback");
 
     if (modal.length) {
@@ -37499,13 +37500,20 @@ $(function () {
       if (btnSave != null) {
         var btnSaveModal = modal.find("#save");
         btnSaveModal.html(btnSave);
-        btnSaveModal.one("click", function () {
+        btnSaveModal.one("click", function (evt2) {
           if (callback !== undefined && callback !== '') {
-            var _fnCrazy = {};
-            _fnCrazy = new Function(callback + "()");
+            if (typeof callback === 'function') {
+              callback(evt2);
+            } else if (typeof callback === 'string') {
+              try {
+                var _fnCrazy = new Function(callback + "()");
 
-            if (typeof _fnCrazy === 'function') {
-              _fnCrazy();
+                if (typeof _fnCrazy === 'function') {
+                  _fnCrazy();
+                }
+              } catch (error) {
+                console.log("Modal error:", error);
+              }
             }
           } else {
             // If have not a function, try submit the form or redirect for any page
@@ -37519,6 +37527,8 @@ $(function () {
               }
             }
           }
+
+          modal.modal("hide");
         });
       }
     }
@@ -37555,8 +37565,11 @@ $(function () {
       $message = $fileSize > 2 ? '{{__("File size exceeds the limit allowed and cannot be saved")}}' + "</br>" : "";
       $message += $MIMES.find(function (el) {
         return el === $fileType;
-      }) == undefined ? '{{__("File type donts allowed and cannot be saved")}}' : "";
-      $("[data-confirm]").data("confirm", $message).trigger("click");
+      }) == undefined ? "{{__('File type donts allowed and cannot be saved')}}" : "";
+      $("[data-confirm]").data({
+        "confirm": $message,
+        "class": 'error-modal'
+      }).trigger("click");
       return false;
     }
 

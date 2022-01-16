@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyType extends Model
 {
+    protected $fillable = ["type"];
     public function companies()
     {
         return $this->hasManyThrough(Company::class, CompanyCompanyType::class, 

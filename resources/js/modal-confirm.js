@@ -2,18 +2,19 @@ $(function(){
 
     var fnCrazy = {};
   
-
+    
     $("[data-confirm]").on("click", function(evt){
-      
+    
         let modal = $('#modal'); 
         let btnClicked = $(this);
         let message = btnClicked.data("confirm");
-        let title = btnClicked.data("title");
-        let btnSave = btnClicked.data("btn-save");
-        let btnCancel = btnClicked.data("btn-cancel");
-        let classModal = btnClicked.data("class");
+        if(!message) return false;
+        let title = (btnClicked.data("title")) ?  btnClicked.data("title"):'Success';
+        let btnSave = (btnClicked.data("btn-save")) ? btnClicked.data("btn-cancel"):'Save' ;
+        let btnCancel = (btnClicked.data("btn-cancel")) ? btnClicked.data("btn-cancel"):'Cancel'; 
+        let classModal = (btnClicked.data("class")) ? btnClicked.data("class"):'success-modal';
         let callback = btnClicked.data("callback");
-        
+      
         if(modal.length){
             
             evt.preventDefault();    
@@ -35,13 +36,25 @@ $(function(){
                 let btnSaveModal = modal.find("#save");
                 btnSaveModal.html(btnSave);
                 
-                btnSaveModal.one("click", function(){
+                btnSaveModal.one("click", function(evt2){
                     
                     if(callback !== undefined && callback !== ''){
-                        let fnCrazy = {};
-                        fnCrazy = new Function(callback+"()");
-                        if(typeof fnCrazy === 'function'){
-                            fnCrazy();
+                        
+                        if(typeof callback === 'function')
+                        {
+                            callback(evt2);
+
+                        }else if(typeof callback === 'string'){
+                            try {
+                                let fnCrazy = new Function(callback+"()");
+                                if(typeof fnCrazy === 'function'){
+                                    fnCrazy();
+                                }    
+                            } catch (error) {
+                                console.log("Modal error:", error);
+                               
+                            }
+                            
                         }
                     }else{// If have not a function, try submit the form or redirect for any page
                         if(btnClicked.attr("action")){
@@ -50,13 +63,17 @@ $(function(){
                         }else{
                             if(btnClicked.attr("ref") != undefined){
                                 window.location.href = btnClicked.attr("ref");
-                            }
+                            } 
                             
 
                         }
                         
                         
                     }
+
+                  
+                    modal.modal("hide");
+
                 });
             }
         }

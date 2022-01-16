@@ -10,9 +10,10 @@ class ProductType extends Model
     /*Base table or view not found: 1146 Table 'traves_14.product_types' doesn't exist (SQL: select * from `product_types` where `product_types`.`id` = 1 limit 1) 
       A tabela producyType não esta no driver atual setado que é o do cliente atual, tem que trocar a conexão (talvez) ou copiar a tabela para a base de dados atual :)  
     */ 
-  /*  public function products(){
-        return $this->belongsToMany();
-    }*/
+    protected $connection = 'traves_main';
+    public function products(){
+      return $this->hasMany(Product::class, 'product_type_id', 'id');
+    }
 
 
 }
