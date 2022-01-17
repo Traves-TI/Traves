@@ -25,9 +25,10 @@ class CreateClientsTable extends Migration
             $table->string('zip_code')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();
-
+            
             $table->string('vat')->nullable();
-  
+            
+            $table->tinyInteger('level')->default('null')->nullable();
             $table->tinyInteger('parent')->nullable();
 
 

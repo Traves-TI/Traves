@@ -1,8 +1,8 @@
 
 
-<div class="container-fluid">
+<main class="container-fluid">
     @yield('content')
-</div>
+</main>
 
 
 

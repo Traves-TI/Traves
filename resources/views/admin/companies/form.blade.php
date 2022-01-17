@@ -24,8 +24,8 @@
             @include('admin.parts.alerts')
 
                 <div class='row form-group'>
-                    
-                    <div class='col-md-12 col-sm-12'>
+                  
+                    <div class='col-md-6 col-sm-12'>
                         <input type='text' 
                             name='name' 
                             value='@isset($company){{ $company->name }}@else{{ old('name') }}@endisset'
@@ -34,6 +34,17 @@
                             required
                             />
                     </div>
+                    <div class='col-md-6 col-sm-12'>
+                        <select required name='company_type_id'  class='form-control' >
+                            <option selected>Type of company</option>
+                            @if(isset($company_type_id) and $company_type_id != null)
+                                @foreach ($company_type_id as $companieTypeRow)
+                                    <option value="{{$companieTypeRow->id}}">{{$companieTypeRow->id}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                    
                 </div>
                 <div class='row form-group'>
 
@@ -70,7 +81,7 @@
 
                 <div class='row form-group'>
 
-                    <div class='col-md-8 col-sm-12'>   
+                    <div class='col-md-6 col-sm-12'>   
                         <input type='text' 
                                 name='address' 
                                 value='@isset($company){{ $company->address }}@else{{ old('address')}}@endisset'
@@ -79,7 +90,7 @@
                                 />
                     </div>
 
-                    <div class='col-md-4 col-sm-12'>
+                    <div class='col-md-2 col-sm-12'>
                         <input type='text' 
                             name='zip_code' 
                             value='@isset($company){{ $company->zip_code }}@else{{ old('zip_code')}}@endisset'
@@ -88,10 +99,7 @@
                             />
                     </div>
 
-                </div>
-
-                <div class='row form-group'>
-                    <div class='col-md-8 col-sm-12'>
+                    <div class='col-md-2 col-sm-12'>
                         <input type='text' 
                             name='city' 
                             value='@isset($company){{ $company->city }}@else{{ old('city')}}@endisset'
@@ -99,8 +107,7 @@
                             class='form-control' 
                             />
                     </div>
-
-                    <div class='col-md-4 col-sm-12'>       
+                    <div class='col-md-2 col-sm-12'>       
                         <select name='country' 
                                 class='form-control'
                                 required 
@@ -110,6 +117,7 @@
                     </div>
 
                 </div>
+
             
 
             <div class='row form-group'>
