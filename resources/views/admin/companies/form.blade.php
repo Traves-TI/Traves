@@ -34,17 +34,28 @@
                             required
                             />
                     </div>
-                    <div class='col-md-6 col-sm-12'>
-                        <select required name='company_type_id'  class='form-control' >
-                            <option selected>Type of company</option>
-                            @if(isset($company_type_id) and $company_type_id != null)
-                                @foreach ($company_type_id as $companieTypeRow)
-                                    <option value="{{$companieTypeRow->id}}">{{$companieTypeRow->id}}</option>
-                                @endforeach
+                    <div class='col-md-3 col-sm-12'>
+                        <select name='company_type_id'  class='form-control' required>
+                            <option value='' selected disabled hidden>{{__('Type of company')}}</option>
+                            @if(isset($companyType) and $companyType != null)
+                            @foreach ($companyType as $companieTypeRow)
+                            <option value="{{$companieTypeRow->id}}">{{$companieTypeRow->type}}</option>
+                            @endforeach
                             @endif
                         </select>
                     </div>
-                    
+                @if(Auth::user()->level == 0)
+                        <div class='col-md-3 col-sm-12'>
+                            <select name='responsible_user'  class='form-control' required>
+                                <option value='' selected disabled hidden>{{__('Responsible User')}}</option>
+                                @if(isset($users) and $users != null)
+                                    @foreach ($users as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    @endif
                 </div>
                 <div class='row form-group'>
 

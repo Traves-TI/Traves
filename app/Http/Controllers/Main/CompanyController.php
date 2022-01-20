@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyValidationRequest;
 use App\Models\Company;
+use App\Models\CompanyType;
+use App\Models\CompanyTypeCompany;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +62,10 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        return view('admin.companies.create');
+        $companyType = (CompanyType::all())->sortBy("type");
+        if(Auth::user()->level == 0) $users = User::all();
+        
+        return view('admin.companies.create', compact('companyType', 'users'));
     }
 
     /**
@@ -71,12 +77,23 @@ class CompanyController extends Controller
     public function store(CompanyValidationRequest $request)
     {
         
-
-        $data = $request->except('_token');
-
-        $user = Auth::user();
-        $company = Company::create($data, $user);
+        $company_type_id = $request->input('company_type_id');
+        $responsible_user = $request->input('responsible_user');
+        $data = $request->except('_token', 'company_type_id', 'responsible_user');
         
+        $user = Auth::user();
+        
+      
+        if($user and $user->level == 0){
+            $user = User::find($responsible_user);
+        }
+
+        $company = Company::create($data, $user);
+
+        if($company_type_id){
+            CompanyTypeCompany::create(["company_type_id" => $company_type_id, 'company_id' => $user->id]);
+        }
+
         if($company){
             $nameCompany = $company->name;
             $request->session()->flash('success', "The company: $nameCompany created with success");

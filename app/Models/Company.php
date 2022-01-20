@@ -24,7 +24,7 @@ class Company extends Model
 
     public static function create($data, User $user){
         $company = static::query()->create($data);
-                
+             
         if(!$company or !($user->id)) return false;
 
         $companyUser = CompanyUser::create(
